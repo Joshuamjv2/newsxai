@@ -1,0 +1,41 @@
+Title
+Publish date
+Author
+Published?
+Category
+Tags
+
+
+Form Structure:
+===============
+
+Author:
+-------
+Input:
+    -first name
+    -last name
+Select:
+    -project
+
+
+Category:
+---------
+Input:
+    -name
+Select:
+    -project
+
+
+Site:
+----
+Input:
+    -name
+    -link
+
+Select:
+    -project
+
+
+Project:
+    -name
+    

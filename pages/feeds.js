@@ -1,12 +1,11 @@
 import { Inter } from 'next/font/google';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import Articles from '@/components/Articles/Articles';
+import Feeds from '@/components/Feeds/Feeds';
 import Layout from '../components/layout';
 import NoItems from '@/components/NoItems';
 
-import { useState, useEffect, useContext } from 'react';
-import UserContext from '@/contextapi/AuthAndUsers';
+import { useState, useEffect } from 'react';
 
 import { authGetUpdateDeleteRequest } from './api/api';
 import { url } from './api/url';
@@ -16,14 +15,14 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
-    const [articles, setArticles] = useState([])
+    const [feeds, setFeeds] = useState([])
     const [noItems, setNoItems] = useState(false)
 
     useEffect(()=>{
         const project = JSON.parse(localStorage.getItem("current_project")).id
-        authGetUpdateDeleteRequest(`${url}/articles?project=${project}`, "GET").then(
+        authGetUpdateDeleteRequest(`${url}/rss_feeds?project=${project}`, "GET").then(
             res => {
-                setArticles(res)
+                setFeeds(res)
                 if (res.length < 1){
                     setNoItems(true)
                 }
@@ -34,8 +33,8 @@ export default function Home() {
     // console.log(authors)
 
     return (
-        <Layout title={"Articles"} add_item_text={"Add articles"}>
-            {articles.length > 0 ? <Articles authors={articles} /> : <NoItems no_items={noItems} text={"You have not written any articles yet!"}/>}
+        <Layout title={"RSS Feeds"} add_item_text={"Add Feeds"}>
+            {feeds.length > 0 ? <Feeds authors={feeds} /> : <NoItems no_items={noItems} text={"You have not added any feeds yet!"}/>}
         </Layout>
     )
 }
