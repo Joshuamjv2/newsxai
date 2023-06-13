@@ -1,35 +1,9 @@
 import { useTable } from "react-table";
 import { useState, useMemo, useEffect } from "react";
 
-export default function Table(){
-    const [data, setData] = useState([{
-            "source": "Medium",
-            "rss_link": "https://www.medium.com/rss",
-            "source_link": "https://www.medium.com/",
-            "project": "XBox",
-            "created": "today"
-        },
-        {
-            "source": "Medium",
-            "rss_link": "https://www.medium.com/rss",
-            "source_link": "https://www.medium.com/",
-            "project": "XBox",
-            "created": "today"
-        },
-        {
-            "source": "Medium",
-            "rss_link": "https://www.medium.com/rss",
-            "source_link": "https://www.medium.com/",
-            "project": "XBox",
-            "created": "today"
-        }
-    ])
+export default function Table({data}){
 
     const columns =  useMemo(()=>[
-        {
-            Header: "SOURCE",
-            accessor: "source"
-        },
         {
             Header: "RSS LINK",
             accessor: "rss_link"
@@ -37,10 +11,6 @@ export default function Table(){
         {
             Header: "CREATED",
             accessor: "created"
-        },
-        {
-            Header: "PROJECT",
-            accessor: "project"
         },
         {
             Header: "SOURCE LINK",

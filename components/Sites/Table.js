@@ -1,26 +1,7 @@
 import { useTable } from "react-table";
 import { useState, useMemo, useEffect } from "react";
 
-export default function Table(){
-    const [data, setData] = useState([{
-            "name": "Sport",
-            "created": "today",
-            "link": "https://google.com",
-            "project": "XBox"
-        },
-        {
-            "name": "Sport",
-            "created": "today",
-            "link": "https://google.com",
-            "project": "XBox"
-        },
-        {
-            "name": "Sport",
-            "created": "today",
-            "link": "https://google.com",
-            "project": "XBox"
-        }
-    ])
+export default function Table({data}){
 
     const columns =  useMemo(()=>[
         {

@@ -38,7 +38,7 @@ export default function Home() {
 
     return (
         <Layout title={"RSS Feeds"} add_item_text={"Add Feeds"}>
-            {feeds.length > 0 ? <Feeds authors={feeds} /> : <NoItems no_items={noItems} text={"You have not added any feeds yet!"}/>}
+            {feeds.length > 0 ? <Feeds feeds={feeds} /> : <NoItems no_items={noItems} text={"You have not added any feeds yet!"}/>}
         </Layout>
     )
 }

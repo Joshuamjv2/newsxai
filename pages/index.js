@@ -43,7 +43,7 @@ export default function Home() {
 
     return (
         <Layout title={"Articles"} add_item_text={"Add articles"}>
-            {articles.length > 0 ? <Articles authors={articles} /> : <NoItems no_items={noItems} text={"You have not written any articles yet!"}/>}
+            {articles.length > 0 ? <Articles articles={articles} /> : <NoItems no_items={noItems} text={"You have not written any articles yet!"}/>}
         </Layout>
     )
 }

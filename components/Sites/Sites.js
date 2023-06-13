@@ -1,9 +1,9 @@
 import Table from "./Table";
 
-export default function Sites(){
+export default function Sites({sites}){
     return(
         <div>
-            <Table />
+            <Table data={sites} />
         </div>
     )
 }

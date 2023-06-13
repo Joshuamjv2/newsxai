@@ -1,9 +1,9 @@
 import Table from "./Table";
 
-export default function Feeds(){
+export default function Feeds({feeds}){
     return(
         <div>
-            <Table />
+            <Table data={feeds} />
         </div>
     )
 }

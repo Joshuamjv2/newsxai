@@ -12,12 +12,12 @@ export default function Table({data}){
             accessor: "last_name"
         },
         {
-            Header: "CREATED",
-            accessor: "created"
-        },
-        {
             Header: "ABOUT",
             accessor: "about"
+        },
+        {
+            Header: "CREATED",
+            accessor: "created"
         }
     ], [])
     // console.log(columns, articles)
