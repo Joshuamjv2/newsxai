@@ -21,11 +21,8 @@ export default function Home() {
 
     useEffect(()=>{
         if (!loading){
-        console.log(loading, "Loading .....")
         const project = current_project.id
         const access_token = tokens.access_token
-        console.log(access_token)
-        // const project = JSON.parse(localStorage.getItem("current_project")).id
         authGetUpdateDeleteRequest(`${url}/articles?project=${project}`, "GET", access_token).then(
             res => {
                 setArticles(res)
