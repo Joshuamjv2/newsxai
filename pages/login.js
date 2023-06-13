@@ -18,13 +18,12 @@ function Login(){
 
     useEffect(()=>{
         authCheck();
-    }, [])
+    }, [isAuth])
 
     function authCheck() {
         if (isAuth) {
             router.push({
-                pathname: '/',
-                query: { returnUrl: router.asPath }
+                pathname: "/",
             });
         }
     }
@@ -38,7 +37,7 @@ function Login(){
             <div className='text-center'>
                 <h1 className='text-5xl font-bold uppercase text-[#fcc300]'>Welcome to Today Maine</h1>
                 <p className='text-xl my-4 text-[#9e9e9e]'>Please login to access your dashboard.</p>
-                <div className='w-32 mx-auto' onClick={handleLogin}>
+                <div className='flex w-full justify-center' onClick={handleLogin}>
                     {loading ? <LoadingSpinner/> : <Button text={"Login"} fa_icon={"key"}/>}
                 </div>
             </div>

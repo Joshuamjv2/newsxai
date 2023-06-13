@@ -1,7 +1,8 @@
 import { Inter } from 'next/font/google'
 import Layout from '../components/layout'
 import Authors from '@/components/Authors/Authors'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import UserContext from '@/contextapi/AuthAndUsers'
 import NoItems from '@/components/NoItems'
 import { authGetUpdateDeleteRequest } from './api/api'
 import { url } from './api/url'
@@ -13,17 +14,21 @@ export default function Home() {
 
     const [authors, setAuthors] = useState([])
     const [noItems, setNoItems] = useState(false)
+    const {loading, current_project, isAuth, setLoading, tokens} = useContext(UserContext)
 
     useEffect(()=>{
+        if (!loading){
+
         const project = JSON.parse(localStorage.getItem("current_project")).id
-        authGetUpdateDeleteRequest(`${url}/authors?project=${project}`, "GET").then(
+        const access_token = tokens.access_token
+        authGetUpdateDeleteRequest(`${url}/authors?project=${project}`, "GET", access_token).then(
             res => {
                 setAuthors(res)
                 if (res.length < 1){
                     setNoItems(true)
                 }
             }
-        )
+        )}
     }, [])
 
     // console.log(authors)

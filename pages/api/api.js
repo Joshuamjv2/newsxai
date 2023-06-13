@@ -26,7 +26,7 @@ export async function postRequest(req_url, body, request_headers = {"Content-Typ
 
 
 export function getAccessToken(){
-    return JSON.parse(localStorage.getItem("token")).access_token
+    return JSON.parse(localStorage.getItem("token")).access_token;
 }
 
 export function getRefreshToken(){
@@ -42,17 +42,15 @@ export function geTokenExpiry(){
 }
 
 // calling protected routes GET, Update, Delete
-export async function authGetUpdateDeleteRequest(req_url, method_name, request_headers={
+export async function authGetUpdateDeleteRequest(req_url, method_name, access_token, request_headers={
   "Content-type": "application/json",
-  "Authorization": `Bearer ${getAccessToken()}`
+  "Authorization": `Bearer ${access_token}`
 }) {
         const current_expiry_time = geTokenExpiry()
-        console.log(current_expiry_time, "Token expiry time")
-        console.log(new Date().toISOString(), "Current time")
         const determine_renew_token = new Date().toISOString() > current_expiry_time
         determine_renew_token && refresh_tokens()
+        console.log(determine_renew_token, current_expiry_time, "Determine renew")
 
-        
         // Default options are marked with *
         const response = await fetch(req_url, {
         method: method_name, // *GET, POST, PUT, DELETE, etc.

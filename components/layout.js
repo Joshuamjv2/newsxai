@@ -1,3 +1,4 @@
+"use client"
 import { Inter } from 'next/font/google'
 
 import Sidebar from '@/components/Sidebar/Sidebar'
@@ -38,18 +39,13 @@ export default function Layout({children, title, add_item_text}){
 
         useEffect(() => {
           setParams((new URL(document.location)).searchParams)
-          console.log(params, "search params")
-            // if (!isAuth) {
-            //   router.push({
-            //       pathname: '/login',
-            //       query: { returnUrl: router.asPath }
-            //   });
-            // }
         }, [])
 
-        // useEffect(()=>{
-
-        // }, [])
+        useEffect(()=>{
+            if (!isAuth) {
+              router.push("/login");
+            }
+        }, [])
 
     return (
       isAuth &&

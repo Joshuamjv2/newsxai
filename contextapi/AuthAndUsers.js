@@ -10,6 +10,8 @@ export const UserContexProvider = ({children}) => {
     const [tokens, setTokens] = useState(null);
     const [projects, setProjects] = useState(null)
     const [current_project, setCurrentProject] = useState(null)
+    const [loading, setLoading] = useState(true)
+
 
     useEffect(()=>{
         setUserInfo(()=>localStorage.getItem('user') ? JSON.parse(localStorage.getItem("user")): null)
@@ -35,16 +37,15 @@ export const UserContexProvider = ({children}) => {
                 localStorage.setItem("current_project", JSON.stringify(res.projects[0]))
                 setCurrentProject(res.projects[0])
                 setProjects(res.projects)
-                setUserInfo(res.user_info)
             }
             const token_to_save = setTokenExpiry(res.token)
             localStorage.setItem("token", JSON.stringify(token_to_save))
             setTokens(token_to_save)
 
             localStorage.setItem("authenticated", "true")
+            setUserInfo(res.user_info)
             setIsAuth("true")
-
-
+            setLoading(false)
     })
     }
 
@@ -65,7 +66,6 @@ export const UserContexProvider = ({children}) => {
         isAuth,
         tokens,
         setIsAuth,
-        setIsAuth,
         setTokens,
         login,
         logout,
@@ -73,7 +73,9 @@ export const UserContexProvider = ({children}) => {
         projects,
         current_project,
         setCurrentProject,
-        setProjects
+        setProjects,
+        loading,
+        setLoading
     }
 
 
