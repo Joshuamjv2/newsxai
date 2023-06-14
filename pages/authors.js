@@ -6,6 +6,8 @@ import UserContext from '@/contextapi/AuthAndUsers'
 import NoItems from '@/components/NoItems'
 import { authGetUpdateDeleteRequest } from './api/api'
 import { url } from './api/url'
+import AuthorForm from '@/components/Authors/AuthorForm'
+import PopupLayout from '@/components/PopupLayout'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -14,7 +16,7 @@ export default function Home() {
 
     const [authors, setAuthors] = useState([])
     const [noItems, setNoItems] = useState(false)
-    const {loading, current_project, isAuth, setLoading, tokens} = useContext(UserContext)
+    const {loading, tokens, popup, current_project} = useContext(UserContext)
 
     useEffect(()=>{
         if (!loading){
@@ -29,12 +31,17 @@ export default function Home() {
                 }
             }
         )}
-    }, [])
+    }, [current_project])
 
     // console.log(authors)
 
     return (
         <Layout title={"Authors"} add_item_text={"Add Authors"}>
+            <PopupLayout active={popup} title={"Add Author"}>
+                {/* <AddItems items={[{name: "Joshua and longer"}, {name: "Joshua"}, {name: "Joshua"}]} />
+                 */}
+                <AuthorForm />
+            </PopupLayout>
             {authors.length > 0 ? <Authors authors={authors} /> : <NoItems no_items={noItems} text={"You have not registered any authors yet!"}/>}
         </Layout>
     )

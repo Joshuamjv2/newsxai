@@ -10,6 +10,8 @@ import { useState, useEffect, useContext} from 'react';
 import { authGetUpdateDeleteRequest } from './api/api';
 import { url } from './api/url';
 import UserContext from '@/contextapi/AuthAndUsers';
+import PopupLayout from '@/components/PopupLayout';
+import AddItems from '@/components/AddItems/AddItems';
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -17,7 +19,7 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
     const [articles, setArticles] = useState([])
     const [noItems, setNoItems] = useState(false)
-    const {loading, current_project, isAuth, setLoading, tokens} = useContext(UserContext)
+    const {loading, current_project, isAuth, setLoading, popup, tokens} = useContext(UserContext)
 
     useEffect(()=>{
         if (!loading){
@@ -34,12 +36,15 @@ export default function Home() {
             console.log("No loading anymore")
             setLoading(false)
         }
-    }, [])
+    }, [current_project])
 
     // console.log(authors)
 
     return (
         <Layout title={"Articles"} add_item_text={"Add articles"}>
+            <PopupLayout active={popup} title={"Add Articles"}>
+                <AddItems items={[{name: "Joshua and longer"}, {name: "Joshua"}, {name: "Joshua"}]} />
+            </PopupLayout>
             {articles.length > 0 ? <Articles articles={articles} /> : <NoItems no_items={noItems} text={"You have not written any articles yet!"}/>}
         </Layout>
     )

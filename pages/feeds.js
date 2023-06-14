@@ -10,7 +10,8 @@ import UserContext from '@/contextapi/AuthAndUsers';
 
 import { authGetUpdateDeleteRequest } from './api/api';
 import { url } from './api/url';
-
+import PopupLayout from '@/components/PopupLayout';
+import FeedsForm from '@/components/Feeds/FeedsForm';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,12 +19,12 @@ export default function Home() {
 
     const [feeds, setFeeds] = useState([])
     const [noItems, setNoItems] = useState(false)
-    const {loading, current_project, isAuth, setLoading, tokens} = useContext(UserContext)
+    const {loading, popup, tokens, current_project} = useContext(UserContext)
 
     useEffect(()=>{
         if(!loading){
         const access_token = tokens.access_token
-        const project = JSON.parse(localStorage.getItem("current_project")).id
+        const project = current_project.id
         authGetUpdateDeleteRequest(`${url}/rss_feeds?project=${project}`, "GET", access_token).then(
             res => {
                 setFeeds(res)
@@ -32,12 +33,14 @@ export default function Home() {
                 }
             }
         )}
-    }, [])
-
-    // console.log(authors)
+    }, [current_project])
 
     return (
         <Layout title={"RSS Feeds"} add_item_text={"Add Feeds"}>
+            <PopupLayout active={popup} title={"Add Feeds"}>
+                {/* <AddItems items={[{name: "Joshua and longer"}, {name: "Joshua"}, {name: "Joshua"}]} /> */}
+                <FeedsForm />
+            </PopupLayout>
             {feeds.length > 0 ? <Feeds feeds={feeds} /> : <NoItems no_items={noItems} text={"You have not added any feeds yet!"}/>}
         </Layout>
     )

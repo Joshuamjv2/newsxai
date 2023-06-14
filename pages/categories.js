@@ -6,6 +6,8 @@ import NoItems from '@/components/NoItems'
 import { authGetUpdateDeleteRequest } from './api/api'
 import { url } from './api/url'
 import UserContext from '@/contextapi/AuthAndUsers'
+import PopupLayout from '@/components/PopupLayout'
+import CategoryForm from '@/components/Categories/CategoryForm'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -14,7 +16,7 @@ export default function Home() {
 
     const [categories, setCategories] = useState([])
     const [noItems, setNoItems] = useState(false)
-    const {loading, tokens} = useContext(UserContext)
+    const {loading, tokens, popup, current_project} = useContext(UserContext)
 
     useEffect(()=>{
         if(!loading){
@@ -28,11 +30,16 @@ export default function Home() {
                 }
             }
         )}
-    }, [])
+    }, [current_project])
 
 
     return (
         <Layout title={"Categories"} add_item_text={"Add Categories"}>
+            <PopupLayout active={popup} title={"Add Category"}>
+                {/* <AddItems items={[{name: "Joshua and longer"}, {name: "Joshua"}, {name: "Joshua"}]} />
+                 */}
+                <CategoryForm />
+            </PopupLayout>
             {categories.length > 0 ? <Categories categories={categories} /> : <NoItems no_items={noItems} text={"You have not added any categories yet!"}/>}
         </Layout>
     )

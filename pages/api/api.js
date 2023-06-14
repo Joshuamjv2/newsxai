@@ -15,13 +15,21 @@ export async function getUpdateDeleteRequest(req_url, method_name, request_heade
   }
 
 
-export async function postRequest(req_url, body, request_headers = {"Content-Type": "application/json"}){
+export async function postRequest(req_url, body, access_token, request_headers = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${access_token}`
+  }){
     const response = await fetch(req_url, {
         method: "POST",
         headers: request_headers,
-        body: body
+        body: body,
+        credentials: "same-origin",
+        ode: "cors", // no-cors, *cors, same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin",
     })
-    return response.json()
+    console.log("Posting ......")
+    return {res: response.json(), code: response.status}
 }
 
 

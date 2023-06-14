@@ -18,7 +18,7 @@ import ContentSection from './ContentSection'
 
 export default function Layout({children, title, add_item_text}){
     const router = useRouter()
-    const {login, init_auth, isAuth, userInfo, setIsAuth, current_project} = useContext(UserContext)
+    const {login, isAuth, userInfo} = useContext(UserContext)
 
     // const handleLogin = () => {
     //     init_auth()
@@ -54,7 +54,7 @@ export default function Layout({children, title, add_item_text}){
         <div className='flex'>
           <Sidebar />
           <div className='flex w-full pr-16 flex-col min-h-screen items-center justify-between px-8 right-0 left-60 pl-60'>
-            <Navigation image={userInfo.picture} current_project={current_project} />
+            <Navigation image={userInfo.picture} />
             <div className='mt-28 w-full border h-full mb-8 ml-16 border-transparent rounded-lg bg-[#191a1a] relative'>
             {/* main part of the page */}
             <ContentSection add_item_text={add_item_text}>

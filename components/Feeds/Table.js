@@ -5,16 +5,20 @@ export default function Table({data}){
 
     const columns =  useMemo(()=>[
         {
+            Header: "SOURCE NAME",
+            accessor: "source_name"
+        },
+        {
             Header: "RSS LINK",
             accessor: "rss_link"
         },
         {
-            Header: "CREATED",
-            accessor: "created"
-        },
-        {
             Header: "SOURCE LINK",
             accessor: "source_link"
+        },
+        {
+            Header: "CREATED",
+            accessor: "created"
         }
     ], [])
     // console.log(columns, articles)
