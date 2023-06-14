@@ -24,7 +24,7 @@ export default function Sidebar(){
             <div className="mx-8 pb-2">
                 <Link href={"/"}>
                     <div className="mb-12">
-                        <h1 className="mt-8 font-semibold uppercase text-2xl text-[#e9eaec]">Today Maine</h1>
+                        <h1 className="mt-8 font-semibold uppercase text-2xl text-[#e9eaec]">NewsX AI</h1>
                         <h6 className="text-[#ffc300]">Admin Panel</h6>
                     </div>
                 </Link>
