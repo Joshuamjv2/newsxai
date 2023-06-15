@@ -9,6 +9,7 @@ export default function Navigation({image}){
     const [showProjects, setShowProjects] = useState(false)
     const updateProject = (project) =>{
         setCurrentProject(project)
+        setShowProjects(false)
         localStorage.setItem("current_project", JSON.stringify({
             name: project.name,
             id: project.id,
