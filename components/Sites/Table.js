@@ -1,5 +1,6 @@
 import { useTable } from "react-table";
 import { useState, useMemo, useEffect } from "react";
+import Moment from "react-moment";
 
 export default function Table({data}){
 
@@ -13,12 +14,9 @@ export default function Table({data}){
             accessor: "link"
         },
         {
-            Header: "PROJECT",
-            accessor: "project"
-        },
-        {
             Header: "CREATED",
-            accessor: "created"
+            accessor: "created",
+            Cell: ({ row }) => <Moment format='MM/DD/YYYY'></Moment>
         }
     ], [])
     // console.log(columns, articles)

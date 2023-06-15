@@ -41,7 +41,7 @@ export default function ProjectForm(){
                     <input
                         className="w-full py-2 rounded-md px-2 text-black border-2 border-[#000] focus:border-[#ffc300] focus:ring-[#ffc300]"
                         name="name"
-                        placeholder="Source Name"
+                        placeholder="Project Name"
                         type="text"
                         value={formik.values.name}
                         onChange={formik.handleChange}

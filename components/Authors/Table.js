@@ -1,5 +1,6 @@
 import { useTable } from "react-table";
 import { useState, useMemo, useEffect } from "react";
+import Moment from "react-moment";
 
 export default function Table({data}){
     const columns =  useMemo(()=>[
@@ -17,7 +18,8 @@ export default function Table({data}){
         },
         {
             Header: "CREATED",
-            accessor: "created"
+            accessor: "created",
+            Cell: ({ row }) => <Moment format='MM/DD/YYYY'></Moment>
         }
     ], [])
     // console.log(columns, articles)

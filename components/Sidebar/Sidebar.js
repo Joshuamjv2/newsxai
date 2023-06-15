@@ -3,12 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Link from "next/link"
 import Button from "../button"
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/router";
 
 import UserContext from "@/contextapi/AuthAndUsers";
 
 export default function Sidebar(){
+    const {current_project, projects, setCurrentProject, projectPopup, setProjectPopup} = useContext(UserContext)
+    const [showProjects, setShowProjects] = useState(false)
     const router = useRouter()
     const {logout, isAuth} = useContext(UserContext)
 
@@ -28,7 +30,9 @@ export default function Sidebar(){
                         <h6 className="text-[#ffc300]">Admin Panel</h6>
                     </div>
                 </Link>
-                <Button fa_icon={"plus"} text={"Add project"} />
+                <div onClick={()=>setProjectPopup(true)}>
+                    <Button fa_icon={"plus"} text={"Add project"} />
+                </div>
             </div>
             <div className="px-4">
                 <ul className="">

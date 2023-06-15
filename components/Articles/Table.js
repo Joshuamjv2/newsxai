@@ -48,7 +48,7 @@ export default function Table({data}){
                     prepareRow(row)
                     return (<tr className="hover:cursor-pointer border-t first:border-t-0 border-x-8 border-x-transparent hover:bg-[#fff] hover:text-black hover:transition-all hover:border-t-transparent" key={""} {...row.getRowProps()}>
                         {row.cells.map(cell=>(
-                            <td className="py-4 px-2" key={row.original.id} {...cell.getCellProps()}>
+                            <td className={`py-4 px-2 ${row.original.published && "bg-[#50594e]"}`} key={row.original.id} {...cell.getCellProps()}>
                                 <Link href={`/${row.original.id}`}>
                                     {cell.render("Cell")}
                                 </Link>

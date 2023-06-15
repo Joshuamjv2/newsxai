@@ -1,13 +1,15 @@
 import Button from "../button";
 import { useFormik } from "formik";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { postRequest } from "@/pages/api/api";
 import * as Yup from "yup";
 import { url } from "@/pages/api/url";
 import UserContext from "@/contextapi/AuthAndUsers";
+import LoadingSpinner from "../loadingSpinner";
 
 export default function FeedsForm(){
     const {current_project, tokens, setPopup} = useContext(UserContext)
+    const [spin, setSpin] = useState(false)
     const formik = useFormik({
         initialValues: {
             first_name: "",
@@ -69,7 +71,7 @@ export default function FeedsForm(){
                         ></textarea>
                 </div>
                 <div className="flex mt-4">
-                    <button className="font-normal py-1 px-4 text-lg bg-[#fcc300] hover:bg-[#fff] active:bg-[#fcc300] rounded-md text-black" type="submit">Submit</button>
+                    {!spin ? <button className="font-normal py-1 px-4 text-lg bg-[#fcc300] hover:bg-[#fff] active:bg-[#fcc300] rounded-md text-black" type="submit">Submit</button>: <LoadingSpinner />}
                 </div>
             </form>
         </main>

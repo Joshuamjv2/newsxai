@@ -53,7 +53,7 @@ export default function Layout({children, title, add_item_text}){
       isAuth &&
       <main>
         <Head>{title}</Head>
-        <PopupLayout active={projectPopup} title={"Add Project"}>
+        <PopupLayout for_project={true} active={projectPopup} title={"Add Project"}>
             <ProjectForm />
         </PopupLayout>
 
