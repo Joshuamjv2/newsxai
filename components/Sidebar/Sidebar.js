@@ -54,7 +54,7 @@ export default function Sidebar(){
             </div>
 
             <div className="mx-8 mb-8" onClick={handleLogout}>
-                <Button text={"Settings"} fa_icon={"gear"} />
+                <Button text={"Logout"} fa_icon={"gear"} />
             </div>
         </div>
     )

@@ -1,5 +1,7 @@
 import { useTable } from "react-table";
 import { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
+import Moment from 'react-moment';
 
 export default function Table({data}){
 
@@ -18,7 +20,8 @@ export default function Table({data}){
         },
         {
             Header: "CREATED",
-            accessor: "created"
+            accessor: "created",
+            Cell: ({ row }) => <Moment format='MM/DD/YYYY'></Moment>
         }
     ], [])
     // console.log(columns, articles)
@@ -37,21 +40,23 @@ export default function Table({data}){
                             </th>
                         ))}
                     </tr>
-                   ))}
+                ))}
             </thead>
-            
+
             <tbody className="" {...getTableBodyProps()}>
-                    {rows.map(row=>{
-                        prepareRow(row)
-                        return (<tr className="hover:cursor-pointer border-t first:border-t-0 border-x-8 border-x-transparent hover:bg-[#fff] hover:text-black hover:transition-all hover:border-t-transparent" key={""} {...row.getRowProps()}>
-                            {row.cells.map(cell=>(
-                                <td className="py-4 px-2" key={row.id} {...cell.getCellProps()}>
+                {rows.map(row=>{
+                    prepareRow(row)
+                    return (<tr className="hover:cursor-pointer border-t first:border-t-0 border-x-8 border-x-transparent hover:bg-[#fff] hover:text-black hover:transition-all hover:border-t-transparent" key={""} {...row.getRowProps()}>
+                        {row.cells.map(cell=>(
+                            <td className="py-4 px-2" key={row.original.id} {...cell.getCellProps()}>
+                                <Link href={`/${row.original.id}`}>
                                     {cell.render("Cell")}
-                                </td>
-                            ))}
-                        </tr>)
-                    })}
-                </tbody>
+                                </Link>
+                            </td>
+                        ))}
+                    </tr>)
+                })}
+            </tbody>
         </table>
         </main>
     )

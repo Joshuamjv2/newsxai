@@ -20,7 +20,6 @@ export default function FeedsForm(){
             ).then(response=>{
                 const data = response.res
                 const  code = response.status
-                console.log(data, code)
                 setPopup(false)
             }),
 
