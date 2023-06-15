@@ -12,6 +12,7 @@ export const UserContexProvider = ({children}) => {
     const [current_project, setCurrentProject] = useState(null)
     const [loading, setLoading] = useState(true)
     const [popup, setPopup] = useState(false)
+    const [projectPopup, setProjectPopup] = useState(false)
 
 
     useEffect(()=>{
@@ -78,7 +79,9 @@ export const UserContexProvider = ({children}) => {
         loading,
         setLoading,
         popup,
-        setPopup
+        setPopup,
+        projectPopup,
+        setProjectPopup
     }
 
 

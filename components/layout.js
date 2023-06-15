@@ -9,17 +9,19 @@ import { useState, useContext, useEffect } from 'react'
 import UserContext from '@/contextapi/AuthAndUsers'
 
 import { useRouter } from 'next/router'
+import AddItems from './AddItems/AddItems'
 
 const inter = Inter({ subsets: ['latin'] })
+import PopupLayout from './PopupLayout'
 
 import ContentSection from './ContentSection'
+import ProjectForm from './Projects/ProjectsForm'
 
 
 
 export default function Layout({children, title, add_item_text}){
     const router = useRouter()
-    const {login, isAuth, userInfo} = useContext(UserContext)
-
+    const {login, isAuth, userInfo, projectPopup, setProjectPopup} = useContext(UserContext)
     // const handleLogin = () => {
     //     init_auth()
     // }
@@ -51,6 +53,10 @@ export default function Layout({children, title, add_item_text}){
       isAuth &&
       <main>
         <Head>{title}</Head>
+        <PopupLayout active={projectPopup} title={"Add Project"}>
+            <ProjectForm />
+        </PopupLayout>
+
         <div className='flex'>
           <Sidebar />
           <div className='flex w-full pr-16 flex-col min-h-screen items-center justify-between px-8 right-0 left-60 pl-60'>

@@ -29,7 +29,7 @@ export async function postRequest(req_url, body, access_token, request_headers =
         credentials: "same-origin",
     })
     console.log("Posting ......")
-    return {res: response.json(), code: response.status}
+    return response
 }
 
 
