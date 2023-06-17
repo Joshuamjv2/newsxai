@@ -15,7 +15,7 @@ export default function ContentSection({children, add_item_text}) {
             <div className='flex justify-between p-4'>
                 <div></div>
                 <div onClick={()=>setPopup(true)}>
-                <Button text={add_item_text} fa_icon={"plus"} />
+                {add_item_text && <Button text={add_item_text} fa_icon={"plus"} />}
                 </div>
             </div>
             {children}

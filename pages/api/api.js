@@ -15,6 +15,23 @@ export async function getUpdateDeleteRequest(req_url, method_name, request_heade
   }
 
 
+
+export async function updateRequest(req_url, body, access_token, request_headers = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${access_token}`
+  }){
+    const response = await fetch(req_url, {
+      method: "PATCH",
+      headers: request_headers,
+      credentials: "same-origin",
+      body: body,
+      cache: "no-cache",
+      mode: "cors"
+    })
+  }
+
+
+
 export async function postRequest(req_url, body, access_token, request_headers = {
     "Content-Type": "application/json",
     "Authorization": `Bearer ${access_token}`
@@ -24,7 +41,7 @@ export async function postRequest(req_url, body, access_token, request_headers =
         headers: request_headers,
         body: body,
         credentials: "same-origin",
-        ode: "cors", // no-cors, *cors, same-origin
+        mode: "cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
         credentials: "same-origin",
     })

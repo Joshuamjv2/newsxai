@@ -7,7 +7,7 @@ import { url } from "@/pages/api/url";
 import UserContext from "@/contextapi/AuthAndUsers";
 import LoadingSpinner from "../loadingSpinner";
 
-export default function FeedsForm(){
+export default function AuthorForm(){
     const {current_project, tokens, setPopup} = useContext(UserContext)
     const [spin, setSpin] = useState(false)
     const formik = useFormik({

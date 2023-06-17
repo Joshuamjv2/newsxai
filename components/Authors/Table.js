@@ -13,10 +13,6 @@ export default function Table({data}){
             accessor: "last_name"
         },
         {
-            Header: "ABOUT",
-            accessor: "about"
-        },
-        {
             Header: "CREATED",
             accessor: "created",
             Cell: ({ row }) => <Moment format='MM/DD/YYYY'></Moment>
