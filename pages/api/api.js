@@ -28,8 +28,22 @@ export async function updateRequest(req_url, body, access_token, request_headers
       cache: "no-cache",
       mode: "cors"
     })
+    return response
   }
 
+export async function deleteRequest(req_url, access_token, request_headers = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${access_token}`
+  }){
+    const response = await fetch(req_url, {
+      method: "DELETE",
+      headers: request_headers,
+      credentials: "same-origin",
+      cache: "no-cache",
+      mode: "cors"
+    })
+    return response
+  }
 
 
 export async function postRequest(req_url, body, access_token, request_headers = {

@@ -2,7 +2,7 @@ import { Inter } from 'next/font/google'
 import Layout from '../components/layout'
 import { useState, useEffect, useContext } from 'react'
 import UserContext from '@/contextapi/AuthAndUsers'
-import { authGetUpdateDeleteRequest } from './api/api'
+import { authGetUpdateDeleteRequest, deleteRequest } from './api/api'
 import { url } from './api/url'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ArticleEditForm from '@/components/Articles/ArticleEditForm'
@@ -25,6 +25,18 @@ export default function DetailPage() {
     const clickEdit = () => {
         setPopup(true)
         console.log(popup)
+    }
+
+    const handleDelete = () => {
+        deleteRequest(
+            `${url}/articles/${article.id}`,
+            tokens.access_token
+        ).then(response=>response.json().then(data=>({
+                data: data,
+                status_code: response.status
+            })).then(res=>{
+                router.push("/")
+            }))
     }
 
     useEffect(()=>{
@@ -79,7 +91,7 @@ export default function DetailPage() {
                                         </div>
                                     </div>
                                 </button>}
-                                <button className="">
+                                <button onClick={handleDelete} className="">
                                     <div className={`text-[#000] cursor-pointer text-center bg-[#d00000] py-2 rounded-md hover:bg-[#fff] active:bg-[#fcc300] px-6`}>
                                         <div className="flex items-center justify-center gap-2">
                                             <FontAwesomeIcon icon={["fas", "trash"]} size="12" />

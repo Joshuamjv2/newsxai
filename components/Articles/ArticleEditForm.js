@@ -9,6 +9,7 @@ import LoadingSpinner from "../loadingSpinner";
 
 export default function ArticleEditForm({post}){
     const {tokens, popup, setPopup} = useContext(UserContext)
+    const [spin, setSpin] = useState(false)
     const formik = useFormik({
         initialValues: {
             post: post.article,
@@ -86,8 +87,11 @@ export default function ArticleEditForm({post}){
                         onBlur={formik.handleBlur}
                         ></textarea>
                 </div>
-                <div className="flex mt-4">
+                <div className="flex mt-4 gap-2">
                     {!spin ? <button className="font-normal py-1 px-4 text-lg bg-[#fcc300] hover:bg-[#fff] active:bg-[#fcc300] rounded-md text-black" type="submit">Update</button>: <LoadingSpinner />}
+                    <div onClick={()=>setPopup(false)}>
+                        <Button text={"cancel"} />
+                    </div>
                 </div>
             </form>
         </main>
