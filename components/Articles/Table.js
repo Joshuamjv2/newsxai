@@ -1,14 +1,9 @@
 import { useTable } from "react-table";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import Moment from "react-moment";
+import { formatDate } from "../utils";
 
 export default function Table({data}){
-    const formatDate = (date) => {
-  // Perform date formatting here
-    const formattedDate = new Date(date).toLocaleDateString();
-    return formattedDate;
-    };
 
     const columns =  useMemo(()=>[
         {

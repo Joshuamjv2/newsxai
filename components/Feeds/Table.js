@@ -1,6 +1,6 @@
 import { useTable } from "react-table";
 import { useMemo } from "react";
-import Moment from "react-moment";
+import { formatDate } from "../utils";
 
 export default function Table({data}){
 
@@ -20,7 +20,7 @@ export default function Table({data}){
         {
             Header: "CREATED",
             accessor: "created",
-            Cell: ({ row }) => <Moment format='MM/DD/YYYY'></Moment>
+            Cell: ({ value }) => formatDate(value)
         }
     ], [])
     // console.log(columns, articles)
