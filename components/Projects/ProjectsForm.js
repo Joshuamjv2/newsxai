@@ -7,7 +7,7 @@ import { url } from "@/pages/api/url";
 import { cookies } from "next/dist/client/components/headers";
 
 export default function ProjectForm(){
-    const {userInfo, tokens, setProjectPopup} = useContext(UserContext)
+    const {userInfo, tokens, setProjectPopup, setCurrentProject} = useContext(UserContext)
     const formik = useFormik({
         initialValues: {
             name: "",
@@ -23,8 +23,10 @@ export default function ProjectForm(){
                 console.log(res.status_code, res.data)
                 const available_projects = JSON.parse(localStorage.getItem("projects"))
                 available_projects.push(res.data)
-                console.log(available_projects)
                 localStorage.setItem("projects", JSON.stringify(available_projects))
+                localStorage.setItem("current_project", JSON.stringify(res.data))
+                setCurrentProject(res.data)
+                console.log("Alerts")
                 setProjectPopup(false)
             })),
 

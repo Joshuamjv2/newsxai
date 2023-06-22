@@ -22,7 +22,7 @@ export default function FeedsForm(){
             ).then(response=>{
                 const data = response.res
                 const  code = response.status
-                router.replace(router.asPath)
+                router.reload(router.asPath)
                 setPopup(false)
             }),
 

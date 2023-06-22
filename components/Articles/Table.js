@@ -1,9 +1,14 @@
 import { useTable } from "react-table";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import Moment from 'react-moment';
+import Moment from "react-moment";
 
 export default function Table({data}){
+    const formatDate = (date) => {
+  // Perform date formatting here
+    const formattedDate = new Date(date).toLocaleDateString();
+    return formattedDate;
+    };
 
     const columns =  useMemo(()=>[
         {
@@ -21,7 +26,7 @@ export default function Table({data}){
         {
             Header: "CREATED",
             accessor: "created",
-            Cell: ({ row }) => <Moment format='MM/DD/YYYY'></Moment>
+            Cell: ({ value }) => formatDate(value)
         }
     ], [])
     // console.log(columns, articles)
