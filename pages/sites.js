@@ -20,7 +20,9 @@ export default function Home() {
 
     const [sites, setSites] = useState([])
     const [noItems, setNoItems] = useState(false)
-    const {tokens, loading, popup, current_project} = useContext(UserContext)
+    const {tokens, loading, popup, current_project, setLoading} = useContext(UserContext)
+
+    setLoading(false)
 
     useEffect(()=>{
         if(!loading){
@@ -32,6 +34,7 @@ export default function Home() {
                 if (res.length < 1){
                     setNoItems(true)
                 }
+                setLoading(false)
             }
         )}
     }, [current_project])

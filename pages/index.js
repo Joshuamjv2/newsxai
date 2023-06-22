@@ -1,5 +1,5 @@
+"use client"
 import { Inter } from 'next/font/google';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Articles from '@/components/Articles/Articles';
 import Layout from '../components/layout';
@@ -16,10 +16,13 @@ import AddItems from '@/components/AddItems/AddItems';
 
 const inter = Inter({ subsets: ['latin'] })
 
+
 export default function Home() {
     const [articles, setArticles] = useState([])
     const [noItems, setNoItems] = useState(false)
     const {loading, current_project, isAuth, setLoading, popup, tokens} = useContext(UserContext)
+
+    
 
     useEffect(()=>{
         if (!loading){
@@ -27,10 +30,12 @@ export default function Home() {
         const access_token = tokens.access_token
         authGetUpdateDeleteRequest(`${url}/articles?project=${project}`, "GET", access_token).then(
             res => {
+                console.log(res)
                 setArticles(res)
                 if (res.length < 1){
                     setNoItems(true)
                 }
+                setLoading(false)
             }
         )} else {
             console.log("No loading anymore")
@@ -41,7 +46,7 @@ export default function Home() {
     // console.log(authors)
 
     return (
-        <Layout title={"Articles"} add_item_text={"Add articles"}>
+        <Layout title={"Articles"}>
             <PopupLayout active={popup} title={"Add Articles"}>
                 <AddItems items={[{name: "Joshua and longer"}, {name: "Joshua"}, {name: "Joshua"}]} />
             </PopupLayout>

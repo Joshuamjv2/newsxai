@@ -1,5 +1,5 @@
+"use client"
 import { Inter } from 'next/font/google';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Feeds from '@/components/Feeds/Feeds';
 import Layout from '../components/layout';
@@ -19,7 +19,9 @@ export default function Home() {
 
     const [feeds, setFeeds] = useState([])
     const [noItems, setNoItems] = useState(false)
-    const {loading, popup, tokens, current_project} = useContext(UserContext)
+    const {loading, popup, tokens, current_project, setLoading} = useContext(UserContext)
+
+    setLoading(false)
 
     useEffect(()=>{
         if(!loading){
@@ -31,6 +33,7 @@ export default function Home() {
                 if (res.length < 1){
                     setNoItems(true)
                 }
+                setLoading(false)
             }
         )}
     }, [current_project])

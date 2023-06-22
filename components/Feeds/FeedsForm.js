@@ -4,8 +4,10 @@ import { postRequest } from "@/pages/api/api";
 import { useContext } from "react";
 import UserContext from "@/contextapi/AuthAndUsers";
 import { url } from "@/pages/api/url";
+import { useRouter } from "next/router";
 
 export default function FeedsForm(){
+    const router = useRouter()
     const {current_project, tokens, setPopup} = useContext(UserContext)
     const formik = useFormik({
         initialValues: {
@@ -20,6 +22,7 @@ export default function FeedsForm(){
             ).then(response=>{
                 const data = response.res
                 const  code = response.status
+                router.replace(router.asPath)
                 setPopup(false)
             }),
 

@@ -5,8 +5,9 @@ import { postRequest } from "@/pages/api/api";
 import * as Yup from "yup";
 import { url } from "@/pages/api/url";
 import UserContext from "@/contextapi/AuthAndUsers";
-import LoadingSpinner from "../loadingSpinner";
+import { useRouter } from "next/router";
 export default function SitesForm(){
+    const router = useRouter()
     const {current_project, tokens, setPopup} = useContext(UserContext)
     const formik = useFormik({
         initialValues: {
@@ -21,6 +22,7 @@ export default function SitesForm(){
                 data: data,
                 status_code: response.status
             })).then(res=>{
+                router.reload(router.asPath)
                 setPopup(false)
             })),
 

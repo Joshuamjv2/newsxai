@@ -1,3 +1,4 @@
+"use client"
 import { Inter } from 'next/font/google'
 import Layout from '../components/layout'
 import Authors from '@/components/Authors/Authors'
@@ -11,11 +12,13 @@ import PopupLayout from '@/components/PopupLayout'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function AuthorsPage() {
 
     const [authors, setAuthors] = useState([])
     const [noItems, setNoItems] = useState(false)
-    const {loading, tokens, popup, current_project} = useContext(UserContext)
+    const {loading, tokens, popup, current_project, setLoading} = useContext(UserContext)
+
+    setLoading(false)
 
     useEffect(()=>{
         if (!loading){
@@ -28,6 +31,7 @@ export default function Home() {
                 if (res.length < 1){
                     setNoItems(true)
                 }
+                setLoading(false)
             }
         )}
     }, [current_project])

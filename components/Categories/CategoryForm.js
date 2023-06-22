@@ -4,8 +4,10 @@ import { postRequest } from "@/pages/api/api";
 import * as Yup from "yup";
 import { url } from "@/pages/api/url";
 import UserContext from "@/contextapi/AuthAndUsers";
+import { useRouter } from "next/router";
 
 export default function CategoryForm(){
+    const router = useRouter()
     const {tokens, setPopup, current_project} = useContext(UserContext)
     const formik = useFormik({
         initialValues: {
@@ -18,6 +20,7 @@ export default function CategoryForm(){
             ).then(response=>{
                 const data = response.res
                 const  code = response.status
+                router.reload(router.asPath)
                 setPopup(false)
             }),
 

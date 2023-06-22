@@ -6,8 +6,10 @@ import * as Yup from "yup";
 import { url } from "@/pages/api/url";
 import UserContext from "@/contextapi/AuthAndUsers";
 import LoadingSpinner from "../loadingSpinner";
+import { useRouter } from "next/router";
 
 export default function AuthorForm(){
+    const router = useRouter()
     const {current_project, tokens, setPopup} = useContext(UserContext)
     const [spin, setSpin] = useState(false)
     const formik = useFormik({
@@ -24,6 +26,7 @@ export default function AuthorForm(){
                 data: data,
                 status_code: response.status
             })).then(res=>{
+                router.reload(router.asPath)
                 setPopup(false)
             })),
 

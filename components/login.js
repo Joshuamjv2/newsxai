@@ -1,3 +1,4 @@
+"use client"
 import Head from "next/head"
 import Button from "@/components/button"
 import { useContext, useEffect, useState } from "react"
@@ -16,20 +17,20 @@ function Login(){
         setLoading(true)
     }
 
-    useEffect(()=>{
-        authCheck();
-    }, [isAuth])
+    // useEffect(()=>{
+    //     authCheck(router.asPath);
+    // }, [isAuth])
 
-    function authCheck() {
-        if (isAuth) {
-            router.push({
-                pathname: "/",
-            });
-        }
-    }
+    // function authCheck(url) {
+    //     if (isAuth) {
+    //         router.push({
+    //             pathname: "/"
+    //         });
+    //     }
+    // }
 
     return  (
-    !isAuth && <main>
+    <main>
         <Head>
             <title>Login</title>
         </Head>

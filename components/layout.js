@@ -16,12 +16,14 @@ import PopupLayout from './PopupLayout'
 
 import ContentSection from './ContentSection'
 import ProjectForm from './Projects/ProjectsForm'
+import Login from './login'
 
 
 
 export default function Layout({children, title, add_item_text}){
     const router = useRouter()
     const {login, isAuth, userInfo, projectPopup, setProjectPopup} = useContext(UserContext)
+    // import Login from '@/pages/login'
     // const handleLogin = () => {
     //     init_auth()
     // }
@@ -43,14 +45,8 @@ export default function Layout({children, title, add_item_text}){
           setParams((new URL(document.location)).searchParams)
         }, [])
 
-        useEffect(()=>{
-            if (!isAuth) {
-              router.push("/login");
-            }
-        }, [])
-
     return (
-      isAuth &&
+      isAuth ?
       <main>
         <Head>{title}</Head>
         <PopupLayout for_project={true} active={projectPopup} title={"Add Project"}>
@@ -69,6 +65,7 @@ export default function Layout({children, title, add_item_text}){
             </div>
           </div>
         </div>
-      </main>
+      </main>:
+      <Login />
     )
 }

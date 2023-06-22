@@ -17,8 +17,7 @@ export default function Sidebar(){
     const handleLogout = () => {
         logout()
         router.push({
-            pathname: '/login',
-            query: { returnUrl: router.asPath }
+            pathname: '/'
         });
     }
     return(
@@ -36,9 +35,6 @@ export default function Sidebar(){
             </div>
             <div className="px-4">
                 <ul className="">
-                    {/* <Link href={"/projects"}>
-                        <SidebarNavItem name={"Projects"} nav_icon="house" />
-                    </Link> */}
                     <Link href={"/"}>
                         <SidebarNavItem name={"Articles"} nav_icon="book"/>
                     </Link>
