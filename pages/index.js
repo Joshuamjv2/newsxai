@@ -47,9 +47,9 @@ export default function Home() {
 
     return (
         <Layout title={"Articles"}>
-            <PopupLayout active={popup} title={"Add Articles"}>
+            {/* <PopupLayout active={popup} title={"Add Articles"}>
                 <AddItems items={[{name: "Joshua and longer"}, {name: "Joshua"}, {name: "Joshua"}]} />
-            </PopupLayout>
+            </PopupLayout> */}
             {articles.length > 0 ? <Articles articles={articles} /> : <NoItems no_items={noItems} text={"You have not written any articles yet!"}/>}
         </Layout>
     )
