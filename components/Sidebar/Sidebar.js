@@ -16,9 +16,9 @@ export default function Sidebar(){
 
     const handleLogout = () => {
         logout()
-        router.push({
-            pathname: '/'
-        });
+        // router.push({
+        //     pathname: '/'
+        // });
     }
     return(
         <div className="bg-[#191a1a] fixed min-h-screen flex flex-col justify-between w-60 cursor-pointer">
