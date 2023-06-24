@@ -6,9 +6,22 @@ import * as Yup from "yup";
 import { url } from "@/pages/api/url";
 import UserContext from "@/contextapi/AuthAndUsers";
 import { useRouter } from "next/router";
+import { authFetchData } from "@/pages/api/api_with_axiso";
 export default function SitesForm(){
     const router = useRouter()
     const {current_project, tokens, setPopup} = useContext(UserContext)
+
+    async function addSite(sites){
+        try {
+            const {data} = await authFetchData(tokens.access_token).post(`/sites?project=${current_project.id}`, [sites])
+            router.reload(router.asPath)
+            setPopup(false)
+        } catch (error) {
+            console.log(error.response.status)
+        }
+    }
+
+    // handle, validate and submit form
     const formik = useFormik({
         initialValues: {
             name: "",

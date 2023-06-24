@@ -9,14 +9,13 @@ import SitesForm from '@/components/Sites/SiteForm';
 import PopupLayout from '@/components/PopupLayout';
 import { useState, useEffect, useContext } from 'react';
 
-import { authGetUpdateDeleteRequest } from './api/api';
-import { url } from './api/url';
 import UserContext from '@/contextapi/AuthAndUsers';
+import { authFetchData } from './api/api_with_axiso';
 
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function SitesPage() {
 
     const [sites, setSites] = useState([])
     const [noItems, setNoItems] = useState(false)
@@ -24,19 +23,23 @@ export default function Home() {
 
     setLoading(false)
 
+    async function fetchSites(){
+        try {
+            const {data} = await authFetchData(tokens.access_token).get(`/sites?project=${current_project.id}`)
+            setSites(data)
+            if (data.length < 1){
+                setNoItems(true)
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log(error.response.status)
+        }
+    }
+
     useEffect(()=>{
         if(!loading){
-        const access_token = tokens.access_token
-        const project = JSON.parse(localStorage.getItem("current_project")).id
-        authGetUpdateDeleteRequest(`${url}/sites?project=${project}`, "GET", access_token).then(
-            res => {
-                setSites(res)
-                if (res.length < 1){
-                    setNoItems(true)
-                }
-                setLoading(false)
-            }
-        )}
+        fetchSites()
+    }
     }, [current_project])
 
     // console.log(authors)

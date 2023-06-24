@@ -5,26 +5,30 @@ import { useContext } from "react";
 import UserContext from "@/contextapi/AuthAndUsers";
 import { url } from "@/pages/api/url";
 import { useRouter } from "next/router";
+import { authFetchData } from "@/pages/api/api_with_axiso";
 
 export default function FeedsForm(){
     const router = useRouter()
     const {current_project, tokens, setPopup} = useContext(UserContext)
+
+    async function addFeeds(feeds){
+        try {
+            const {data} = await authFetchData(tokens.access_token).post(`/rss_feeds?project=${current_project.id}`, [feeds])
+            router.reload(router.asPath)
+            setPopup(false)
+        } catch (error) {
+            console.log(error.response.status)
+        }
+    }
+
+    // handle, validate and submit form
     const formik = useFormik({
         initialValues: {
             source_name: "",
             source_link: "",
             rss_link: ""
         },
-        onSubmit: (values) => postRequest(
-            `${url}/rss_feeds?project=${current_project.id}`,
-            JSON.stringify([values]),
-            tokens.access_token
-            ).then(response=>{
-                const data = response.res
-                const  code = response.status
-                router.reload(router.asPath)
-                setPopup(false)
-            }),
+        onSubmit: (values) => addFeeds(values),
 
         validationSchema: Yup.object({
             source_name: Yup.string().required("Source name is required."),

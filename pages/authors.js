@@ -5,10 +5,9 @@ import Authors from '@/components/Authors/Authors'
 import { useState, useEffect, useContext } from 'react'
 import UserContext from '@/contextapi/AuthAndUsers'
 import NoItems from '@/components/NoItems'
-import { authGetUpdateDeleteRequest } from './api/api'
-import { url } from './api/url'
 import AuthorForm from '@/components/Authors/AuthorForm'
 import PopupLayout from '@/components/PopupLayout'
+import { authFetchData } from './api/api_with_axiso'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,20 +19,22 @@ export default function AuthorsPage() {
 
     setLoading(false)
 
+    async function fetchAuthors(){
+        try {
+            const {data} = await authFetchData(tokens.access_token).get(`/authors?project=${current_project.id}`)
+            setAuthors(data)
+            if (data.length < 1){
+                setNoItems(true)
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log(error.response.status)
+        }
+    }
     useEffect(()=>{
         if (!loading){
-
-        const project = JSON.parse(localStorage.getItem("current_project")).id
-        const access_token = tokens.access_token
-        authGetUpdateDeleteRequest(`${url}/authors?project=${project}`, "GET", access_token).then(
-            res => {
-                setAuthors(res)
-                if (res.length < 1){
-                    setNoItems(true)
-                }
-                setLoading(false)
-            }
-        )}
+            fetchAuthors()
+        }
     }, [current_project])
 
     // console.log(authors)

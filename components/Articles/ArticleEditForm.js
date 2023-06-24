@@ -1,15 +1,28 @@
 import Button from "../button";
 import { useFormik } from "formik";
-import { useContext, useState } from "react";
-import { updateRequest } from "@/pages/api/api";
+import { useContext,  useState } from "react";
 import * as Yup from "yup";
-import { url } from "@/pages/api/url";
 import UserContext from "@/contextapi/AuthAndUsers";
 import LoadingSpinner from "../loadingSpinner";
+import { authFetchData } from "@/pages/api/api_with_axiso";
+import { useRouter } from "next/router";
 
 export default function ArticleEditForm({post}){
-    const {tokens, popup, setPopup} = useContext(UserContext)
+    const {tokens, setPopup} = useContext(UserContext)
     const [spin, setSpin] = useState(false)
+    const router = useRouter()
+
+    async function updateArticle(id, article){
+        try {
+            const {data} = await authFetchData(tokens.access_token).patch(`/articles/${id}`, article)
+            router.reload(router.asPath)
+            setPopup(false)
+        } catch (error) {
+            console.log(error.response.status)
+        }
+    }
+
+    // handle, validate and submit form
     const formik = useFormik({
         initialValues: {
             post: post.article,
@@ -17,17 +30,7 @@ export default function ArticleEditForm({post}){
             author: post.author,
             site: post.site
         },
-        onSubmit: (values) => updateRequest(
-            `${url}/articles/${post.id}`,
-            JSON.stringify(values),
-            tokens.access_token
-        ).then(response=>response.json().then(data=>({
-                data: data,
-                status_code: response.status
-            })).then(res=>{
-                setPopup(false)
-                console.log(popup)
-            })),
+        onSubmit: (values) => updateArticle(post.id, values),
 
         validationSchema: Yup.object({
             post: Yup.string().required("First Name is required").min(100, "A minimum of 100 characters is required"),

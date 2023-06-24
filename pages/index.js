@@ -7,11 +7,9 @@ import NoItems from '@/components/NoItems';
 
 import { useState, useEffect, useContext} from 'react';
 
-import { authGetUpdateDeleteRequest } from './api/api';
-import { url } from './api/url';
 import UserContext from '@/contextapi/AuthAndUsers';
-import PopupLayout from '@/components/PopupLayout';
-import AddItems from '@/components/AddItems/AddItems';
+import { authFetchData } from './api/api_with_axiso';
+
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -22,28 +20,27 @@ export default function Home() {
     const [noItems, setNoItems] = useState(false)
     const {loading, current_project, isAuth, setLoading, popup, tokens} = useContext(UserContext)
 
-    
+    setLoading(false)
+
+    async function fetchArticles(){
+        try {
+            const {data} = await authFetchData(tokens.access_token).get(`/articles?project=${current_project.id}`)
+            setArticles(data)
+            if (data.length < 1){
+                setNoItems(true)
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log(error.response.status)
+        }
+    }
 
     useEffect(()=>{
         if (!loading){
-        const project = current_project.id
-        const access_token = tokens.access_token
-        authGetUpdateDeleteRequest(`${url}/articles?project=${project}`, "GET", access_token).then(
-            res => {
-                console.log(res)
-                setArticles(res)
-                if (res.length < 1){
-                    setNoItems(true)
-                }
-                setLoading(false)
-            }
-        )} else {
-            console.log("No loading anymore")
-            setLoading(false)
+            fetchArticles()
         }
     }, [current_project])
 
-    // console.log(authors)
 
     return (
         <Layout title={"Articles"}>

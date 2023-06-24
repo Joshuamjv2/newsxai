@@ -5,24 +5,30 @@ import * as Yup from "yup";
 import { url } from "@/pages/api/url";
 import UserContext from "@/contextapi/AuthAndUsers";
 import { useRouter } from "next/router";
+import { authFetchData } from "@/pages/api/api_with_axiso";
 
 export default function CategoryForm(){
     const router = useRouter()
     const {tokens, setPopup, current_project} = useContext(UserContext)
+
+    async function addCategory(category){
+        try {
+            const {data} = await authFetchData(tokens.access_token).post(`/categories?project=${current_project.id}`, category)
+            router.reload(router.asPath)
+            setPopup(false)
+        } catch (error) {
+            console.log(error.response.status)
+            setPopup(false)
+        }
+
+    }
+
+    // handle, validate and submit form
     const formik = useFormik({
         initialValues: {
             name: "",
         },
-        onSubmit: (values) => postRequest(
-            `${url}/categories?project=${current_project.id}`,
-            JSON.stringify(values),
-            tokens.access_token
-            ).then(response=>{
-                const data = response.res
-                const  code = response.status
-                router.reload(router.asPath)
-                setPopup(false)
-            }),
+        onSubmit: (values) => addCategory(values),
 
         validationSchema: Yup.object({
             name: Yup.string().max(50, "Name should not exceed 50 characters").required("Source name is required."),

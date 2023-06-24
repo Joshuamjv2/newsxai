@@ -3,8 +3,7 @@ import Layout from '../components/layout'
 import Categories from '@/components/Categories/Categories'
 import { useState, useEffect, useContext } from 'react'
 import NoItems from '@/components/NoItems'
-import { authGetUpdateDeleteRequest } from './api/api'
-import { url } from './api/url'
+import { authFetchData } from './api/api_with_axiso'
 import UserContext from '@/contextapi/AuthAndUsers'
 import PopupLayout from '@/components/PopupLayout'
 import CategoryForm from '@/components/Categories/CategoryForm'
@@ -13,25 +12,28 @@ import CategoryForm from '@/components/Categories/CategoryForm'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-
     const [categories, setCategories] = useState([])
     const [noItems, setNoItems] = useState(false)
     const {loading, tokens, popup, current_project,setLoading} = useContext(UserContext)
     setLoading(false)
 
+    async function fetchCategories(){
+        try {
+            const {data} = await authFetchData(tokens.access_token).get(`/categories?project=${current_project.id}`)
+            setCategories(data)
+            if (data.length < 1){
+                setNoItems(true)
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log(error.response.status)
+        }
+    }
+
     useEffect(()=>{
         if(!loading){
-        const access_token = tokens.access_token
-        const project = JSON.parse(localStorage.getItem("current_project")).id
-        authGetUpdateDeleteRequest(`${url}/categories?project=${project}`, "GET", access_token).then(
-            res => {
-                setCategories(res)
-                if (res.length < 1){
-                    setNoItems(true)
-                }
-                setLoading(false)
-            }
-        )}
+            fetchCategories()
+        }
     }, [current_project])
 
 

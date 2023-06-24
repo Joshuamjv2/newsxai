@@ -2,8 +2,6 @@ import { Inter } from 'next/font/google'
 import Layout from '../components/layout'
 import { useState, useEffect, useContext } from 'react'
 import UserContext from '@/contextapi/AuthAndUsers'
-import { authGetUpdateDeleteRequest, deleteRequest } from './api/api'
-import { url } from './api/url'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ArticleEditForm from '@/components/Articles/ArticleEditForm'
 
@@ -13,47 +11,47 @@ import { useRouter } from 'next/router'
 
 import Button from '@/components/button'
 import LoadingSpinner from '@/components/loadingSpinner'
+import { authFetchData } from './api/api_with_axiso'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function DetailPage() {
-    const {loading, tokens, popup, setPopup} = useContext(UserContext)
+    const {loading, tokens, popup, setPopup, setLoading} = useContext(UserContext)
     const router = useRouter();
     const [article, setArticle] = useState(null)
     const { id } = router.query;
+
+    useEffect(()=>{
+        // setLoading(false)
+        if (!loading){
+            getSingleArticle()
+        }
+    }, [])
 
     const clickEdit = () => {
         setPopup(true)
         console.log(popup)
     }
 
-    const handleDelete = () => {
-        deleteRequest(
-            `${url}/articles/${article.id}`,
-            tokens.access_token
-        ).then(response=>response.json().then(data=>({
-                data: data,
-                status_code: response.status
-            })).then(res=>{
-                router.push("/")
-            }))
+    const handleDelete = async () => {
+        try {
+            await authFetchData(tokens.access_token).delete(`/articles/${article.id}`)
+            router.push("/")
+        } catch (error) {
+            console.log(error.response.status)
+        }
     }
 
-    useEffect(()=>{
-        if (!loading){
-        const access_token = tokens.access_token
-        authGetUpdateDeleteRequest(`${url}/articles/${id}`, "GET", access_token).then(
-            res => {
-                console.log(res, article)
-                setArticle(res)
-                if (res.length < 1){
-                    setNoItems(true)
-                }
-            }
-        )}
-    }, [])
-
-    // console.log(authors)
+    async function getSingleArticle(){
+        try {
+            const {data} = await authFetchData(tokens.access_token).get(`/articles/${id}`)
+            setArticle(data)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     return (
         <Layout title={"Article"}>
@@ -76,8 +74,6 @@ export default function DetailPage() {
                         </p>
                         <div className='flex justify-between mt-8 mb-8'>
                             <div className='flex gap-4 items-center'>
-                                {/* <Button text={"Assign author"} fa_icon={"person"} />
-                                <Button text={"Assign Site"} fa_icon={"globe"} /> */}
                             </div>
                                 <div className='flex gap-12'>
                                     <div onClick={clickEdit}>

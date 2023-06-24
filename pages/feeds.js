@@ -7,9 +7,7 @@ import NoItems from '@/components/NoItems';
 
 import { useState, useEffect, useContext } from 'react';
 import UserContext from '@/contextapi/AuthAndUsers';
-
-import { authGetUpdateDeleteRequest } from './api/api';
-import { url } from './api/url';
+import { authFetchData } from './api/api_with_axiso';
 import PopupLayout from '@/components/PopupLayout';
 import FeedsForm from '@/components/Feeds/FeedsForm';
 
@@ -23,19 +21,24 @@ export default function Home() {
 
     setLoading(false)
 
+    async function fetchFeeds(){
+        try {
+            const {data} = await authFetchData(tokens.access_token).get(`/rss_feeds?project=${current_project.id}`)
+            console.log(data)
+            setFeeds(data)
+            if (data.length < 1){
+                setNoItems(true)
+            }
+            setLoading(false)
+        } catch (error) {
+            console.log(error.response.status) // popup error window with message based on status code
+        }
+    }
+
     useEffect(()=>{
         if(!loading){
-        const access_token = tokens.access_token
-        const project = current_project.id
-        authGetUpdateDeleteRequest(`${url}/rss_feeds?project=${project}`, "GET", access_token).then(
-            res => {
-                setFeeds(res)
-                if (res.length < 1){
-                    setNoItems(true)
-                }
-                setLoading(false)
-            }
-        )}
+            fetchFeeds()
+        }
     }, [current_project])
 
     return (

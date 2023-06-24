@@ -1,34 +1,36 @@
 import Button from "../button";
 import { useFormik } from "formik";
 import { useContext, useState } from "react";
-import { postRequest } from "@/pages/api/api";
 import * as Yup from "yup";
-import { url } from "@/pages/api/url";
 import UserContext from "@/contextapi/AuthAndUsers";
 import LoadingSpinner from "../loadingSpinner";
 import { useRouter } from "next/router";
+import { authFetchData } from "@/pages/api/api_with_axiso";
 
 export default function AuthorForm(){
     const router = useRouter()
     const {current_project, tokens, setPopup} = useContext(UserContext)
     const [spin, setSpin] = useState(false)
+
+    async function  addAuthor(author){
+        try {
+            const {data} = await authFetchData(tokens.access_token).post(`/authors?project=${current_project.id}`, author)
+            router.reload(router.asPath)
+            setPopup(false)
+        } catch (error) {
+            console.log(error.response.status)
+            setPopup(false)
+        }
+    }
+
+    // handle, validate and submit form
     const formik = useFormik({
         initialValues: {
             first_name: "",
             last_name: "",
             about: ""
         },
-        onSubmit: (values) => postRequest(
-            `${url}/authors?project=${current_project.id}`,
-            JSON.stringify(values),
-            tokens.access_token
-        ).then(response=>response.json().then(data=>({
-                data: data,
-                status_code: response.status
-            })).then(res=>{
-                router.reload(router.asPath)
-                setPopup(false)
-            })),
+        onSubmit: (values) => addAuthor(values),
 
         validationSchema: Yup.object({
             first_name: Yup.string().required("First Name is required"),
