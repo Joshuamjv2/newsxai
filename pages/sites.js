@@ -1,6 +1,4 @@
 import { Inter } from 'next/font/google';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import Sites from '@/components/Sites/Sites';
 import Layout from '../components/layout';
 import NoItems from '@/components/NoItems';
