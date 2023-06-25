@@ -37,6 +37,9 @@ export const authFetchData = (token) => {
                     return Promise.reject(refreshError);
                 }
             }
+
+            // Handle other errors
+            return Promise.reject(error);
         }
     )
     return instance
