@@ -36,9 +36,9 @@ export const authFetchData = (token) => {
                     console.log("retrying here")
                     return instance(originalRequest);
                 } catch (error) {
-                    localStorage.setItem("authenticated", "false")
-                    window.location.href = "/"
+                    // localStorage.setItem("authenticated", "false")
                     localStorage.clear()
+                    window.location.href = "/"
                     // return Promise.reject(error);
                 }
             } else {
