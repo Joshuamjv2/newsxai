@@ -19,7 +19,7 @@ export const authFetchData = (token) => {
         response => {
             return response
         },
-        async error => {
+        async (error) => {
             const originalRequest = error.config;
             if (error.response && error.response.status === 401 && !originalRequest._retry){
                 originalRequest._retry = true;
@@ -27,17 +27,20 @@ export const authFetchData = (token) => {
                 const refresh_token = JSON.parse(localStorage.getItem("token")).refresh_token
                 const user_id = JSON.parse(localStorage.getItem("user")).id
 
+                console.log("retrying", instance, originalRequest)
+
                 try {
-                    const {token} = await fetchData(`/auth/refresh?refresh_token=${refresh_token}&user_id=${user_id}`)
-                    const token_res = setTokenExpiry(token.data)
-                    localStorage.setItem("token", JSON.stringify(token_res))
+                    const {data} = await fetchData(`/auth/refresh?refresh_token=${refresh_token}&user_id=${user_id}`)
+                    localStorage.setItem("token", JSON.stringify(setTokenExpiry(data)))
+                    instance.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`
+                    console.log("retrying here")
+                    return instance(originalRequest);
                 } catch (error) {
-                    console.log(error.response.status, "Refresh Error")
+                    localStorage.setItem("authenticated", "false")
                     window.location.href = "/"
-                    return Promise.reject(refreshError);
+                    return Promise.reject(error);
                 }
             }
-
             // Handle other errors
             return Promise.reject(error);
         }
