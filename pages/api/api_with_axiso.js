@@ -38,12 +38,12 @@ export const authFetchData = (token) => {
                 } catch (error) {
                     localStorage.setItem("authenticated", "false")
                     window.location.href = "/"
-                    localStorage.clear()
-                    return Promise.reject(error);
+                    // localStorage.clear()
+                    // return Promise.reject(error);
                 }
+            } else {
+                return Promise.reject(error);
             }
-            // Handle other errors
-            return Promise.reject(error);
         }
     )
     return instance
