@@ -1,6 +1,6 @@
 import '@/styles/globals.css'
 import '@/styles/spinner.css'
-import UserContext, { UserContexProvider } from '@/contextapi/AuthAndUsers'
+import { UserContexProvider } from '@/contextapi/AuthAndUsers'
 
 
 import "@fortawesome/fontawesome-svg-core/styles.css"
