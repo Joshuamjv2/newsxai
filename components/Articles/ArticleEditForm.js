@@ -19,8 +19,8 @@ export default function ArticleEditForm({post}){
     async function updateArticle(id, article){
         try {
             const {data} = await authFetchData(tokens.access_token).patch(`/articles/${id}`, article)
-            router.reload(router.asPath)
             setPopup(false)
+            router.push(`/`)
         } catch (error) {
             console.log(error.response.status)
         }
@@ -33,9 +33,6 @@ export default function ArticleEditForm({post}){
             const authors_res = await authFetchData(tokens.access_token).get(`/authors?project=${project}`)
             const sites_res = await authFetchData(tokens.access_token).get(`/sites?project=${project}`)
             const categories_res = await authFetchData(tokens.access_token).get(`/categories?project=${project}`)
-            // console.log(categories_res, "categories")
-            // console.log(sites_res, "sites")
-            // console.log(authors_res, "authors")
             setAuthors(authors_res.data)
             setCategories(categories_res.data)
             setSites(sites_res.data)
@@ -70,8 +67,10 @@ export default function ArticleEditForm({post}){
             category: Yup.string()
         })
     })
+
+    console.log(formik.values)
     return (
-        <main className="mt-4 mb-8 w-full">
+        showForm ? <main className="mt-4 mb-8 w-full">
             {showForm && <form onSubmit={formik.handleSubmit} className="mx-8">
 
                 {/* title */}
@@ -90,7 +89,7 @@ export default function ArticleEditForm({post}){
 
                 {/* authors */}
                 <div className="text-left pt-4 lg:w-2/3">
-                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="author">{formik.touched.author && formik.errors.author ? formik.errors.post : "Select Author"}</label>
+                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="author">{formik.touched.author && formik.errors.author ? formik.errors.author : "Select Author"}</label>
                     <select
                         className="w-full py-2 rounded-md px-2 text-black border-[#000] focus:border-[#ffc300]"
                         name="author"
@@ -105,7 +104,7 @@ export default function ArticleEditForm({post}){
 
                 {/* sites */}
                 <div className="text-left pt-4 lg:w-2/3">
-                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="site">{formik.touched.site && formik.errors.site ? formik.errors.post : "Select Site"}</label>
+                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="site">{formik.touched.site && formik.errors.site ? formik.errors.site : "Select Site"}</label>
                     <select
                         className="w-full py-2 rounded-md px-2 text-black border-[#000] focus:border-[#ffc300]"
                         name="site"
@@ -114,13 +113,13 @@ export default function ArticleEditForm({post}){
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                     >
-                        {sites.map(site=><option className="py-2 px-2" key={site.id}>{site.name}</option>)}
+                        {sites.map(site=><option className="py-2 px-2" key={site.id}>{site.link}</option>)}
                     </select>
                 </div>
 
                 {/* catgories */}
                 <div className="text-left pt-4 lg:w-2/3">
-                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="category">{formik.touched.category && formik.errors.category ? formik.errors.post : "Select Category"}</label>
+                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="category">{formik.touched.category && formik.errors.category ? formik.errors.category : "Select Category"}</label>
                     <select
                         className="w-full py-2 rounded-md px-2 text-black border-[#000] focus:border-[#ffc300]"
                         name="category"
@@ -137,7 +136,7 @@ export default function ArticleEditForm({post}){
                 <div className="text-left pt-4 lg:w-full">
                     <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="post">{formik.touched.about && formik.errors.post ? formik.errors.post : "Article"}</label>
                     <textarea
-                        className="rounded-md w-full text-[#000] p-2" name="post" value={formik.values.post} id="post" cols="25" rows="12"
+                        className="rounded-md w-full text-[#000] p-6" name="post" value={formik.values.post} id="post" cols="25" rows="30"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         ></textarea>
@@ -149,6 +148,9 @@ export default function ArticleEditForm({post}){
                     </div>
                 </div>
             </form>}
-        </main>
+        </main>:
+        <div className="w-full mt-36 flex justify-center items-center">
+            <LoadingSpinner/>
+        </div>
     )
 }
