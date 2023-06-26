@@ -2,10 +2,12 @@ import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Button from "../button"
 import UserContext from "@/contextapi/AuthAndUsers"
+import ArticleGenerator from "./ArticleGenerator"
 import { useContext, useState } from "react"
+import { useEffect } from "react"
 
 export default function Navigation({image}){
-    const {current_project, projects, setCurrentProject, projectPopup, setProjectPopup} = useContext(UserContext)
+    const {current_project, projects, setCurrentProject, projectPopup, setProjectPopup, tokens} = useContext(UserContext)
     const [showProjects, setShowProjects] = useState(false)
     const updateProject = (project) =>{
         setCurrentProject(project)
@@ -14,13 +16,15 @@ export default function Navigation({image}){
             name: project.name,
             id: project.id,
             owner: project.owner,
+            generate_articles: project.generate_articles,
             created: project.created,
             updated: project.updated
         }))
     }
+
     return(
         <div className={`fixed right-0 flex left-60 px-8 pt-8 items-center justify-between mb-8 bg-black ${!projectPopup&&"z-20"}`}>
-            <div className="flex gap-36 w-11/12 items-center">
+            <div className="flex gap-4 w-11/12 items-center">
                 {
                     current_project !== null ?
                         <div className="overflow-hidden">
@@ -40,6 +44,7 @@ export default function Navigation({image}){
                     :
                         <Button text={"add project"} fa_icon={"plus"} />
                 }
+            <ArticleGenerator access_token={tokens.access_token} />
             </div>
             <div className="rounded-full overflow-hidden">
                 <Image src={image} height={50} width={50} alt="User profile image" />

@@ -1,6 +1,6 @@
 import Button from "../button";
 import { useFormik } from "formik";
-import { useContext,  useState } from "react";
+import { useContext,  useState, useEffect } from "react";
 import * as Yup from "yup";
 import UserContext from "@/contextapi/AuthAndUsers";
 import LoadingSpinner from "../loadingSpinner";
@@ -10,6 +10,10 @@ import { useRouter } from "next/router";
 export default function ArticleEditForm({post}){
     const {tokens, setPopup} = useContext(UserContext)
     const [spin, setSpin] = useState(false)
+    const [authors, setAuthors] = useState([])
+    const [sites, setSites] = useState([])
+    const [categories, setCategories] = useState([])
+    const[showForm, setShowForm] = useState(false)
     const router = useRouter()
 
     async function updateArticle(id, article){
@@ -22,26 +26,55 @@ export default function ArticleEditForm({post}){
         }
     }
 
+    async function setDropdown(){
+        try {
+            if (post.project){
+            const project = post.project
+            const authors_res = await authFetchData(tokens.access_token).get(`/authors?project=${project}`)
+            const sites_res = await authFetchData(tokens.access_token).get(`/sites?project=${project}`)
+            const categories_res = await authFetchData(tokens.access_token).get(`/categories?project=${project}`)
+            // console.log(categories_res, "categories")
+            // console.log(sites_res, "sites")
+            // console.log(authors_res, "authors")
+            setAuthors(authors_res.data)
+            setCategories(categories_res.data)
+            setSites(sites_res.data)
+            setShowForm(true)
+            console.log(showForm)
+        }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(()=>{
+        setDropdown()
+    }, [])
+
     // handle, validate and submit form
     const formik = useFormik({
         initialValues: {
             post: post.article,
             title: post.title,
             author: post.author,
-            site: post.site
+            site: post.site,
+            category: post.category
         },
         onSubmit: (values) => updateArticle(post.id, values),
 
         validationSchema: Yup.object({
-            post: Yup.string().required("First Name is required").min(100, "A minimum of 100 characters is required"),
+            post: Yup.string().required("First Name is required").min(100, "A minimum of 100 characters is required").optional(),
             title: Yup.string().required("Last Name is required"),
-            site: Yup.string().url("Insert a valid URL"),
-            author: Yup.string()
+            site: Yup.string().url("Select a valid URL"),
+            author: Yup.string(),
+            category: Yup.string()
         })
     })
     return (
         <main className="mt-4 mb-8 w-full">
-            <form onSubmit={formik.handleSubmit} className="mx-8">
+            {showForm && <form onSubmit={formik.handleSubmit} className="mx-8">
+
+                {/* title */}
                 <div className="text-left pt-2 lg:w-2/3">
                     <label className="block text-[#fff] text-md mb-1 font-bold" htmlFor="title">{formik.touched.title && formik.errors.title ? formik.errors.title : "Title"}</label>
                     <input
@@ -54,34 +87,53 @@ export default function ArticleEditForm({post}){
                         onBlur={formik.handleBlur}
                     />
                 </div>
+
+                {/* authors */}
                 <div className="text-left pt-4 lg:w-2/3">
-                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="author">
-                        {formik.touched.author && formik.errors.author ? formik.errors.author : "Author"}
-                    </label>
-                    <input
+                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="author">{formik.touched.author && formik.errors.author ? formik.errors.post : "Select Author"}</label>
+                    <select
                         className="w-full py-2 rounded-md px-2 text-black border-[#000] focus:border-[#ffc300]"
                         name="author"
-                        placeholder="Author"
                         type="text"
                         value={formik.values.author}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                    />
+                    >
+                        {authors.map(author=><option className="py-2 px-2" key={author.id}>{author.first_name}</option>)}
+                    </select>
                 </div>
+
+                {/* sites */}
                 <div className="text-left pt-4 lg:w-2/3">
-                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="site">
-                        {formik.touched.site && formik.errors.site ? formik.errors.site : "Site"}
-                    </label>
-                    <input
+                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="site">{formik.touched.site && formik.errors.site ? formik.errors.post : "Select Site"}</label>
+                    <select
                         className="w-full py-2 rounded-md px-2 text-black border-[#000] focus:border-[#ffc300]"
                         name="site"
-                        placeholder="Site"
                         type="text"
                         value={formik.values.site}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                    />
+                    >
+                        {sites.map(site=><option className="py-2 px-2" key={site.id}>{site.name}</option>)}
+                    </select>
                 </div>
+
+                {/* catgories */}
+                <div className="text-left pt-4 lg:w-2/3">
+                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="category">{formik.touched.category && formik.errors.category ? formik.errors.post : "Select Category"}</label>
+                    <select
+                        className="w-full py-2 rounded-md px-2 text-black border-[#000] focus:border-[#ffc300]"
+                        name="category"
+                        type="text"
+                        value={formik.values.category}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    >
+                        {categories.map(category=><option className="py-2 px-2" key={category.id}>{category.name}</option>)}
+                    </select>
+                </div>
+
+                {/* article */}
                 <div className="text-left pt-4 lg:w-full">
                     <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="post">{formik.touched.about && formik.errors.post ? formik.errors.post : "Article"}</label>
                     <textarea
@@ -96,7 +148,7 @@ export default function ArticleEditForm({post}){
                         <Button text={"cancel"} />
                     </div>
                 </div>
-            </form>
+            </form>}
         </main>
     )
 }
