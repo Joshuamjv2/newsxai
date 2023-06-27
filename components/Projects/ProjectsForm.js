@@ -5,30 +5,48 @@ import { useContext } from "react";
 import UserContext from "@/contextapi/AuthAndUsers";
 import { url } from "@/pages/api/url";
 import { cookies } from "next/dist/client/components/headers";
+import { authFetchData } from "@/pages/api/api_with_axiso";
 
 export default function ProjectForm(){
-    const {userInfo, tokens, setProjectPopup, setCurrentProject} = useContext(UserContext)
+    const {userInfo, tokens, setProjectPopup, setCurrentProject, setProjects} = useContext(UserContext)
+
+    const addProject = async (project) => {
+        try {
+            const {data} = await authFetchData(tokens.access_token).post(`/projects?owner=${userInfo.id}`, project)
+            const available_projects = JSON.parse(localStorage.getItem("projects"))
+            available_projects.push(data)
+            localStorage.setItem("projects", JSON.stringify(available_projects))
+            localStorage.setItem("current_project", JSON.stringify(data))
+            setCurrentProject(data)
+            setProjects(available_projects)
+            setProjectPopup(false)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const formik = useFormik({
         initialValues: {
             name: "",
         },
-        onSubmit: (values) => postRequest(
-            `${url}/projects?owner=${userInfo.id}`,
-            JSON.stringify(values),
-            tokens.access_token
-            ).then(response=>response.json().then(data=>({
-                data: data,
-                status_code: response.status
-            })).then(res=>{
-                console.log(res.status_code, res.data)
-                const available_projects = JSON.parse(localStorage.getItem("projects"))
-                available_projects.push(res.data)
-                localStorage.setItem("projects", JSON.stringify(available_projects))
-                localStorage.setItem("current_project", JSON.stringify(res.data))
-                setCurrentProject(res.data)
-                console.log("Alerts")
-                setProjectPopup(false)
-            })),
+        onSubmit: (values) => addProject(values),
+        // onSubmit: (values) => postRequest(
+        //     `${url}/projects?owner=${userInfo.id}`,
+        //     JSON.stringify(values),
+        //     tokens.access_token
+        //     ).then(response=>response.json().then(data=>({
+        //         data: data,
+        //         status_code: response.status
+        //     })).then(res=>{
+        //         console.log(res.status_code, res.data)
+        //         const available_projects = JSON.parse(localStorage.getItem("projects"))
+        //         available_projects.push(res.data)
+        //         localStorage.setItem("projects", JSON.stringify(available_projects))
+        //         localStorage.setItem("current_project", JSON.stringify(res.data))
+        //         setCurrentProject(res.data)
+        //         console.log("Alerts")
+        //         setProjectPopup(false)
+        //     })),
 
         validationSchema: Yup.object({
             name: Yup.string().max(50, "Name should not exceed 50 characters").required("Source name is required."),

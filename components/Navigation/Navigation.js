@@ -7,7 +7,7 @@ import { useContext, useState } from "react"
 import { useEffect } from "react"
 
 export default function Navigation({image}){
-    const {current_project, projects, setCurrentProject, projectPopup, setProjectPopup, tokens} = useContext(UserContext)
+    const {current_project, projects, setCurrentProject, projectPopup, setProjectPopup, tokens, setProjects} = useContext(UserContext)
     const [showProjects, setShowProjects] = useState(false)
     const updateProject = (project) =>{
         setCurrentProject(project)
