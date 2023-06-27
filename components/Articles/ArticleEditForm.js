@@ -98,7 +98,7 @@ export default function ArticleEditForm({post}){
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                     >
-                        {authors.map(author=><option className="py-2 px-2" key={author.id}>{author.first_name}</option>)}
+                        {authors.map(author=><option className="py-2 px-2" key={author.id} value={author.id}>{author.first_name}</option>)}
                     </select>
                 </div>
 

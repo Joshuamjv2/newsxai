@@ -2,13 +2,16 @@ import { authFetchData } from "@/pages/api/api_with_axiso";
 import { useContext } from "react";
 import { useState, useEffect } from "react";
 import UserContext from "@/contextapi/AuthAndUsers";
+import LoadingSpinner from "../loadingSpinner";
 
 
 export default function ArticleGenerator({access_token}){
     const {current_project, setCurrentProject} = useContext(UserContext)
     const [generate, setGenerate] = useState(current_project.generate_articles)
+    const [spin, setSpin] = useState(false)
 
     const handleClick = async () => {
+        setSpin(true)
         try {
             const update_item = JSON.stringify({generate_articles: !generate})
             const {data} = await authFetchData(access_token).patch(`/projects/${current_project.id}`, update_item)
@@ -18,7 +21,6 @@ export default function ArticleGenerator({access_token}){
             const saved_project = JSON.parse(localStorage.getItem("current_project"))
             const projects = JSON.parse(localStorage.getItem("projects"))
             saved_project.generate_articles = !generate
-
 
             // update current project in project array
             for (let i=0; i<projects.length; i++){
@@ -34,8 +36,10 @@ export default function ArticleGenerator({access_token}){
             localStorage.setItem("projects", JSON.stringify(projects))
 
             setGenerate(!generate)
+            setSpin(false)
         } catch (error) {
             console.log(error)
+            setSpin(false)
         }
     }
     useEffect(()=>{
@@ -45,10 +49,15 @@ export default function ArticleGenerator({access_token}){
     const current_color = `${generate ? "[#fc7100]": "[#fc1d00]"}`
 
     return(
+        !spinner ?
         <div onClick={()=>handleClick()} className={`flex ${generate ? "bg-[#43c45f]": "bg-[#fc1d00]"} items-center py-2 gap-2 px-6 rounded-md hover:bg-white active:bg-[${generate ? "#ffc300": "#fc1d00"}]`}>
             <h3 className="cursor-pointer text-lg text-[#000] text-center capitalize font-semibold">
                 {generate ? "Turn off Article Writer": "Turn on Article Writer"}
             </h3>
+        </div>
+        :
+        <div className="flex items-center justify-center mt-36">
+            <LoadingSpinner/>
         </div>
     )
 }
