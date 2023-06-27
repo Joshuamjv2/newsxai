@@ -56,7 +56,7 @@ export default function ArticleGenerator({access_token}){
             </h3>
         </div>
         :
-        <div className="flex items-center justify-center mt-36">
+        <div className="">
             <LoadingSpinner/>
         </div>
     )
