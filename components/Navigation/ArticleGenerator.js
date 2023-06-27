@@ -49,7 +49,7 @@ export default function ArticleGenerator({access_token}){
     const current_color = `${generate ? "[#fc7100]": "[#fc1d00]"}`
 
     return(
-        !spinner ?
+        !spin ?
         <div onClick={()=>handleClick()} className={`flex ${generate ? "bg-[#43c45f]": "bg-[#fc1d00]"} items-center py-2 gap-2 px-6 rounded-md hover:bg-white active:bg-[${generate ? "#ffc300": "#fc1d00"}]`}>
             <h3 className="cursor-pointer text-lg text-[#000] text-center capitalize font-semibold">
                 {generate ? "Turn off Article Writer": "Turn on Article Writer"}
