@@ -49,9 +49,13 @@ export default function Table({data}){
             accessor: "published",
             Cell: ({ value }) => (
                 <div>
-                    {value == true ? <div className="flex justify-center align-center rounded-md mr-4 bg-red bg-green-800">
-                    <div className="py-1">yes</div></div>:<div className="flex justify-center align-center rounded-md mr-4 bg-red bg-red-800">
-                    <div className="py-1">no</div></div>}
+                        <div className="flex justify-center align-center mr-4">
+                            {value == true ?
+                                <div className="py-1 bg-green-800 px-4 rounded-md">yes</div>
+                                :
+                                <div className="py-1 bg-red-800 px-4 rounded-md">no</div>
+                            }
+                        </div>
                 </div>
             )
         },
