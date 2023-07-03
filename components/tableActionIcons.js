@@ -18,9 +18,9 @@ export default function TableActionIcons({value, path, icon="trash"}){
         }
     }
     return(
-        <div className="flex gap-6 pr-6">
-            <div onClick={()=>handleDelete(value)}>
-                        <FontAwesomeIcon icon={["fas", icon]} />
+        <div className="flex gap-6 mx-4">
+            <div className="text-[#ff3300]" onClick={()=>handleDelete(value)}>
+                <FontAwesomeIcon icon={["fas", icon]} />
             </div>
             {/* <FontAwesomeIcon icon={["fas", "trash"]} /> */}
         </div>

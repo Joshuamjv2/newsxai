@@ -5,10 +5,14 @@ import UserContext from "@/contextapi/AuthAndUsers"
 import ArticleGenerator from "./ArticleGenerator"
 import { useContext, useState } from "react"
 import { useEffect } from "react"
+import { authFetchData } from "@/pages/api/api_with_axiso"
+import { useRouter } from "next/router"
 
 export default function Navigation({image}){
     const {current_project, projects, setCurrentProject, projectPopup, setProjectPopup, tokens, setProjects} = useContext(UserContext)
     const [showProjects, setShowProjects] = useState(false)
+    const router = useRouter()
+
     const updateProject = (project) =>{
         setCurrentProject(project)
         setShowProjects(false)
@@ -20,6 +24,20 @@ export default function Navigation({image}){
             created: project.created,
             updated: project.updated
         }))
+    }
+
+    const handleDelete = async (id) => {
+        try {
+            const {data} = authFetchData(tokens.access_token).delete(`/projects/${id}`)
+            // localStorage.setItem("projects", JSON.stringify(projects.filter(item => item.id !== id)))
+            setProjects(projects.filter(item => item.id !== id))
+            if (id == current_project.id){
+                setCurrentProject(projects[0])
+                localStorage.setItem("current_project", JSON.stringify(current_project))
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return(
@@ -35,7 +53,10 @@ export default function Navigation({image}){
                             {showProjects && <div className="mt-2 absolute rounded-md">
                                 <ul className="text-black font-semibold text-lg w-full border border-[#323131] rounded-md overflow-hidden ">
                                     {projects.map(project=>
-                                        <li onClick={()=>project.id !== current_project.id && updateProject(project)} className="border-b-2 w-full bg-[#323131] px-8 py-2 text-lg last:border-b-0 border-[#fff] hover:bg-[#fff] active:bg-[#323131] cursor-pointer" key={project.id}>{project.name}</li>
+                                        <li className="relative border-b-2 w-full bg-[#323131] px-8 py-2 text-lg last:border-b-0 border-[#fff] hover:bg-[#fff] active:bg-[#323131] cursor-pointer flex gap-2" key={project.id}>
+                                        <h6 onClick={()=>project.id !== current_project.id && updateProject(project)} className="mr-4">{project.name}</h6>
+                                        {projects.length > 1 && <div onClick={()=>handleDelete(project.id)} className="absolute right-4 text-[#ff3300]"><FontAwesomeIcon icon={["fas", "trash"]} /></div>}
+                                        </li>
                                     )}
                                     <li onClick={()=>setProjectPopup(!projectPopup)} className="cursor-pointer border-b-2 w-full bg-[#323131] px-8 py-2 text-lg last:border-b-0 border-[#fff] hover:bg-[#fff] active:bg-[#323131]">Add Project</li>
                                 </ul>
