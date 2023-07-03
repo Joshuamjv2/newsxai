@@ -29,8 +29,8 @@ export default function Navigation({image}){
     const handleDelete = async (id) => {
         try {
             const {data} = authFetchData(tokens.access_token).delete(`/projects/${id}`)
-            // localStorage.setItem("projects", JSON.stringify(projects.filter(item => item.id !== id)))
             setProjects(projects.filter(item => item.id !== id))
+            localStorage.setItem("projects", JSON.stringify(projects.filter(item => item.id !== id)))
             if (id == current_project.id){
                 setCurrentProject(projects[0])
                 localStorage.setItem("current_project", JSON.stringify(current_project))

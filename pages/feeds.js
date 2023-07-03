@@ -22,6 +22,7 @@ export default function Home() {
     setLoading(false)
 
     async function fetchFeeds(){
+        console.log(current_project, "current_project")
         try {
             const {data} = await authFetchData(tokens.access_token).get(`/rss_feeds?project=${current_project.id}`)
             console.log(data)
