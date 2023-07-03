@@ -84,7 +84,8 @@ export default function Table({data}){
     const {pageIndex} = state
 
     return(
-        <main className="px-4 mt-4">
+        <div>
+        <main className="px-4 mt-4" style={{ maxHeight: '420px', overflowY: 'scroll' }}>
         <table className="w-full overflow-hidden rounded-md" {...getTableProps()}>
             <thead className="">
                 {headerGroups.map((headerGroup)=>(
@@ -103,7 +104,7 @@ export default function Table({data}){
                 ))}
             </thead>
 
-            <tbody className="" {...getTableBodyProps()}>
+            <tbody {...getTableBodyProps()}>
                 {page.map(row=>{
                     prepareRow(row)
                     return (<tr className="hover:cursor-pointer border-t first:border-t-0 border-x-8 border-x-transparent hover:bg-[#fff] hover:text-black hover:transition-all hover:border-t-transparent" key={""} {...row.getRowProps()}>
@@ -116,6 +117,7 @@ export default function Table({data}){
                 })}
             </tbody>
         </table>
+        </main>
         <div className="py-4 mx-4 text-black">
             <span className="text-white pr-4">Page {' '}
                 <strong>{pageIndex + 1} of {pageOptions.length}</strong>{' '}
@@ -123,6 +125,6 @@ export default function Table({data}){
             <button className="mr-8 bg-[#ffc300] w-20 py-1 rounded-md hover:bg-white active:bg-[#ffc300]" onClick={()=>previousPage()} disabled={!previousPage}>Previous</button>
             <button className="bg-[#ffc300] w-20 py-1 rounded-md hover:bg-white active:bg-[#ffc300]" disabled={!nextPage} onClick={()=>nextPage()}>Next</button>
         </div>
-        </main>
+        </div>
     )
 }
