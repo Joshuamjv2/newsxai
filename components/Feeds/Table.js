@@ -1,9 +1,14 @@
 import { useTable } from "react-table";
-import { useMemo } from "react";
+import { useMemo, useContext } from "react";
 import { formatDate } from "../utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { authFetchData } from "@/pages/api/api_with_axiso";
+import UserContext from "@/contextapi/AuthAndUsers";
+import { useRouter } from "next/router";
+import TableActionIcons from "../tableActionIcons";
+
 
 export default function Table({data}){
-
     const columns =  useMemo(()=>[
         {
             Header: "SOURCE NAME",
@@ -21,6 +26,13 @@ export default function Table({data}){
             Header: "CREATED",
             accessor: "created",
             Cell: ({ value }) => formatDate(value)
+        },
+        {
+            Header: "ACTIONS",
+            accessor: "id",
+            Cell: ({ value }) => (
+                <TableActionIcons value={value} path={"rss_feeds"} />
+            )
         }
     ], [])
     // console.log(columns, articles)

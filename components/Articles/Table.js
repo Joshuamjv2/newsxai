@@ -2,6 +2,8 @@ import { useSortBy, useTable, usePagination } from "react-table";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { formatDate } from "../utils";
+import TableActionIcons from "../tableActionIcons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Table({data}){
 
@@ -22,6 +24,18 @@ export default function Table({data}){
             Header: "CREATED",
             accessor: "created",
             Cell: ({ value }) => formatDate(value)
+        },
+        {
+            Header: "ACTIONS",
+            accessor: "id",
+            Cell: ({ value }) => (
+                <div className="flex">
+                    <TableActionIcons value={value} path={"articles"} />
+                    <Link href={`/${value}`}>
+                        <FontAwesomeIcon icon={["fas", "pen"]} />
+                    </Link>
+                </div>
+            )
         }
     ], [])
     // console.log(columns, articles)
@@ -60,9 +74,7 @@ export default function Table({data}){
                     return (<tr className="hover:cursor-pointer border-t first:border-t-0 border-x-8 border-x-transparent hover:bg-[#fff] hover:text-black hover:transition-all hover:border-t-transparent" key={""} {...row.getRowProps()}>
                         {row.cells.map(cell=>(
                             <td className={`py-2 px-2 ${row.original.published && "bg-[#50594e]"}`} key={row.original.id} {...cell.getCellProps()}>
-                                <Link href={`/${row.original.id}`}>
-                                    {cell.render("Cell")}
-                                </Link>
+                                {cell.render("Cell")}
                             </td>
                         ))}
                     </tr>)

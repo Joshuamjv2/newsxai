@@ -33,6 +33,8 @@ export const authFetchData = (token) => {
                     const {data} = await fetchData(`/auth/refresh?refresh_token=${refresh_token}&user_id=${user_id}`)
                     localStorage.setItem("token", JSON.stringify(setTokenExpiry(data)))
                     instance.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`
+                    console.log("repeat")
+                    console.log(instance(originalRequest), "Original request")
                     return instance(originalRequest);
                 } catch (error) {
                     localStorage.setItem("authenticated", "false")

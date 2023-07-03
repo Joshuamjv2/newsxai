@@ -1,6 +1,5 @@
-import { getUpdateDeleteRequest, setTokenExpiry } from "@/pages/api/api";
+import { setTokenExpiry } from "@/pages/api/api";
 import { createContext, useState, useEffect } from "react";
-import { url } from "@/pages/api/url";
 import { fetchData } from "@/pages/api/api_with_axiso";
 import axios from "axios";
 

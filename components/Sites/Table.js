@@ -1,6 +1,6 @@
 import { useTable } from "react-table";
 import { useMemo } from "react";
-import Moment from "react-moment";
+import TableActionIcons from "../tableActionIcons";
 import { formatDate } from "../utils";
 
 export default function Table({data}){
@@ -18,6 +18,13 @@ export default function Table({data}){
             Header: "CREATED",
             accessor: "created",
             Cell: ({ value }) => formatDate(value)
+        },
+        {
+            Header: "ACTIONS",
+            accessor: "id",
+            Cell: ({ value }) => (
+                <TableActionIcons value={value} path={"sites"} />
+            )
         }
     ], [])
     // console.log(columns, articles)
