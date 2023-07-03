@@ -42,6 +42,15 @@ export default function DetailPage() {
         }
     }
 
+    const handle_publish = async () => {
+        try {
+            const {data} = await authFetchData(tokens.access_token).patch(`/articles/${article.id}`, {published: true})
+            router.push('/')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     async function getSingleArticle(){
         try {
             const {data} = await authFetchData(tokens.access_token).get(`/articles/${id}`)
@@ -80,7 +89,7 @@ export default function DetailPage() {
                                         <Button text={"Edit"} fa_icon={"pen"} />
                                     </div>
                                     {!article.published && <button className="">
-                                    <div className={`text-[#000] cursor-pointer text-center bg-[#55a630] py-2 rounded-md hover:bg-[#fff] active:bg-[#fcc300] px-6`}>
+                                    <div onClick={handle_publish} className={`text-[#000] cursor-pointer text-center bg-green-800 py-2 rounded-md hover:bg-[#fff] active:bg-[#fcc300] px-6`}>
                                         <div className="flex items-center justify-center gap-2">
                                             <FontAwesomeIcon icon={["fas", "rocket"]} size="12" />
                                             <h3 className="capitalize">Publish</h3>
@@ -88,7 +97,7 @@ export default function DetailPage() {
                                     </div>
                                 </button>}
                                 <button onClick={handleDelete} className="">
-                                    <div className={`text-[#000] cursor-pointer text-center bg-[#d00000] py-2 rounded-md hover:bg-[#fff] active:bg-[#fcc300] px-6`}>
+                                    <div className={`text-[#000] cursor-pointer text-center bg-red-800 py-2 rounded-md hover:bg-[#fff] active:bg-[#fcc300] px-6`}>
                                         <div className="flex items-center justify-center gap-2">
                                             <FontAwesomeIcon icon={["fas", "trash"]} size="12" />
                                             <h3 className="capitalize">Delete</h3>
