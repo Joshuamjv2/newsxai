@@ -34,6 +34,7 @@ export const authFetchData = (token) => {
                     localStorage.setItem("token", JSON.stringify(setTokenExpiry(data)))
                     // instance.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`
                     originalRequest.headers['Authorization'] = `Bearer ${data.access_token}`
+                    console.log(originalRequest.headers, "New headers -----------")
                     console.log("repeat")
                     console.log(instance(originalRequest), "Original request")
                     return instance(originalRequest);

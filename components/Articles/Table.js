@@ -10,16 +10,39 @@ export default function Table({data}){
     const columns =  useMemo(()=>[
         {
             Header: "TITLE",
-            accessor: "title"
+            accessor: "title",
+            Cell: ({ value }) => (
+                <div className="truncate max-w-xs">
+                    {value}
+                </div>
+            )
         },
         {
             Header: "AUTHOR",
-            accessor: "author",
+            accessor: "author"
+            // Cell: ({ value }) => (
+            //     <div>
+            //         {value ? value.name : ""}
+            //     </div>
+            // )
+        },
+        {
+            Header: "CATEGORY",
+            accessor: "category",
             Cell: ({ value }) => (
                 <div>
                     {value ? value.name : ""}
                 </div>
             )
+        },
+        {
+            Header: "SITE",
+            accessor: "site"
+            // Cell: ({ value }) => (
+            //     <div>
+            //         {value ? value.name : ""}
+            //     </div>
+            // )
         },
         {
             Header: "PUBLISHED",

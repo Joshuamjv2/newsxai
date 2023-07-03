@@ -63,8 +63,8 @@ export default function ArticleEditForm({post}){
             post: Yup.string().required("First Name is required").min(100, "A minimum of 100 characters is required").optional(),
             title: Yup.string().required("Last Name is required"),
             site: Yup.string().url("Select a valid URL"),
-            author: Yup.string(),
-            category: Yup.string()
+            author: Yup.object(),
+            category: Yup.object()
         })
     })
 
@@ -89,16 +89,19 @@ export default function ArticleEditForm({post}){
 
                 {/* authors */}
                 <div className="text-left pt-4 lg:w-2/3">
-                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="author">{formik.touched.author && formik.errors.author ? formik.errors.author : "Select Site"}</label>
+                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="author">{formik.touched.author && formik.errors.author ? formik.errors.author : "Select Author"}</label>
                     <select
                         className="w-full py-2 rounded-md px-2 text-black border-[#000] focus:border-[#ffc300]"
                         name="author"
                         type="text"
-                        value={formik.values.author}
-                        onChange={formik.handleChange}
+                        // value={formik.values.author}
+                        onChange={(event) => {
+                            const selectedAuthor = JSON.parse(event.target.value);
+                            formik.setFieldValue("author", selectedAuthor);
+                        }}
                         onBlur={formik.handleBlur}
                     >
-                        {authors.map(site=><option className="py-2 px-2" key={site.id}>{`${site.first_name} ${site.last_name}`}</option>)}
+                        {authors.map(author=><option className="py-2 px-2" key={author.id} value={JSON.stringify({id: author.id, name: `${author.first_name} ${author.last_name}`})}>{author.last_name}</option>)}
                     </select>
                 </div>
 
@@ -110,10 +113,13 @@ export default function ArticleEditForm({post}){
                         name="site"
                         type="text"
                         value={formik.values.site}
-                        onChange={formik.handleChange}
+                        onChange={(event) => {
+                            const selectedItem = JSON.parse(event.target.value);
+                            formik.setFieldValue("site", selectedItem);
+                        }}
                         onBlur={formik.handleBlur}
                     >
-                        {sites.map(site=><option className="py-2 px-2" key={site.id}>{site.link}</option>)}
+                        {sites.map(site=><option className="py-2 px-2" key={site.id} value={JSON.stringify({id: site.id, name: `${site.name}`})}>{site.name}</option>)}
                     </select>
                 </div>
 
@@ -125,10 +131,13 @@ export default function ArticleEditForm({post}){
                         name="category"
                         type="text"
                         value={formik.values.category}
-                        onChange={formik.handleChange}
+                        onChange={(event) => {
+                            const selectedItem = JSON.parse(event.target.value);
+                            formik.setFieldValue("category", selectedItem);
+                        }}
                         onBlur={formik.handleBlur}
                     >
-                        {categories.map(category=><option className="py-2 px-2" key={category.id}>{category.name}</option>)}
+                        {categories.map(category=><option className="py-2 px-2" key={category.id} value={JSON.stringify({id: category.id, name: `${category.name}`})}>{category.name}</option>)}
                     </select>
                 </div>
 
