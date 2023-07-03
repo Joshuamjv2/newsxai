@@ -65,7 +65,7 @@ export default function DetailPage() {
                         <div className='flex items-center justify-between text-[#616060]'>
                             <div className='flex gap-2 items-center mb-2 text-lg'>
                                 <FontAwesomeIcon icon={["fas", "person"]} color='#616060' />
-                                <p className='text-md'>{article.author ? article.author : "Not Set"}</p>
+                                <p className='text-md'>{article.author ? article.author.name : "Not Set"}</p>
                             </div>
                             <div><Moment format="DD/MM/YYYY">{article.created}</Moment></div>
                         </div>

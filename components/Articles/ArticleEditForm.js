@@ -53,9 +53,9 @@ export default function ArticleEditForm({post}){
         initialValues: {
             post: post.article,
             title: post.title,
-            author: post.author,
-            site: post.site,
-            category: post.category
+            author: post.author || "",
+            site: post.site || "",
+            category: post.category || ""
         },
         onSubmit: (values) => updateArticle(post.id, values),
 
@@ -63,7 +63,7 @@ export default function ArticleEditForm({post}){
             post: Yup.string().required("First Name is required").min(100, "A minimum of 100 characters is required").optional(),
             title: Yup.string().required("Last Name is required"),
             site: Yup.string().url("Select a valid URL"),
-            author: Yup.string(),
+            author: Yup.object(),
             category: Yup.string()
         })
     })
@@ -95,10 +95,13 @@ export default function ArticleEditForm({post}){
                         name="author"
                         type="text"
                         value={formik.values.author}
-                        onChange={formik.handleChange}
+                        onChange={(event) => {
+                            const selectedAuthor = JSON.parse(event.target.value);
+                            formik.setFieldValue("author", selectedAuthor);
+                        }}
                         onBlur={formik.handleBlur}
                     >
-                        {authors.map(author=><option className="py-2 px-2" key={author.id} value={author.id}>{author.first_name}</option>)}
+                        {authors.map(author=><option className="py-2 px-2" key={author.id} value={JSON.stringify({id: author.id, name: `${author.first_name} ${author.last_name}`})}>{author.last_name}</option>)}
                     </select>
                 </div>
 
@@ -124,7 +127,7 @@ export default function ArticleEditForm({post}){
                         className="w-full py-2 rounded-md px-2 text-black border-[#000] focus:border-[#ffc300]"
                         name="category"
                         type="text"
-                        value={formik.values.category}
+                        value={formik.values.category.name}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                     >

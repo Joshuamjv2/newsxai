@@ -14,11 +14,22 @@ export default function Table({data}){
         },
         {
             Header: "AUTHOR",
-            accessor: "author"
+            accessor: "author",
+            Cell: ({ value }) => (
+                <div>
+                    {value ? value.name : ""}
+                </div>
+            )
         },
         {
             Header: "PUBLISHED",
-            accessor: "published"
+            accessor: "published",
+            Cell: ({ value }) => (
+                <div>
+                    {value == true ? <div className="bg-green-800 mr-4 rounded-md">yes</div>:<div className="flex justify-center align-center rounded-md mr-4 bg-red bg-red-800">
+                    <div className="py-1">no</div></div>}
+                </div>
+            )
         },
         {
             Header: "CREATED",
