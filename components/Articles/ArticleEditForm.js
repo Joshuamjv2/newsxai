@@ -89,7 +89,7 @@ export default function ArticleEditForm({post}){
 
                 {/* authors */}
                 <div className="text-left pt-4 lg:w-2/3">
-                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="author">{formik.touched.author && formik.errors.author ? formik.errors.author : "Select Site"}</label>
+                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="author">{formik.touched.author && formik.errors.author ? formik.errors.author : "Select Author"}</label>
                     <select
                         className="w-full py-2 rounded-md px-2 text-black border-[#000] focus:border-[#ffc300]"
                         name="author"

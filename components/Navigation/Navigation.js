@@ -9,7 +9,7 @@ import { authFetchData } from "@/pages/api/api_with_axiso"
 import { useRouter } from "next/router"
 
 export default function Navigation({image}){
-    const {current_project, projects, setCurrentProject, projectPopup, setProjectPopup, tokens, setProjects} = useContext(UserContext)
+    const {current_project, logout, projects, setCurrentProject, projectPopup, setProjectPopup, tokens, setProjects} = useContext(UserContext)
     const [showProjects, setShowProjects] = useState(false)
     const router = useRouter()
 
@@ -26,6 +26,17 @@ export default function Navigation({image}){
         }))
     }
 
+    const handleLogout = () => {
+        logout()
+        router.push({
+            pathname: '/settings'
+        });
+    }
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(current_project.id)
+        alert(`Project ID ${current_project.id} copied!`)
+    }
     const handleDelete = async (id) => {
         try {
             const {data} = authFetchData(tokens.access_token).delete(`/projects/${id}`)
@@ -65,10 +76,19 @@ export default function Navigation({image}){
                     :
                         <Button text={"add project"} fa_icon={"plus"} />
                 }
-            <ArticleGenerator access_token={tokens.access_token} />
+                <ArticleGenerator access_token={tokens.access_token} />
+                <div className="flex gap-2 items-center" onClick={handleCopy}>
+                    <Button text={"Copy Project ID"} fa_icon="copy" />
+                </div>
             </div>
-            <div className="rounded-full overflow-hidden">
-                <Image src={image} height={50} width={50} alt="User profile image" />
+            <div className="flex gap-4 items-center">
+                <div onClick={handleLogout} className="text-md gap-2 flex items-center rounded-md py-2 px-4 bg-red-800 cursor-pointer">
+                    <FontAwesomeIcon icon={["fas", "door-closed"]} />
+                    <h6>Logout</h6>
+                </div>
+                <div className="rounded-full overflow-hidden">
+                    <Image src={image} height={60} width={60} alt="User profile image" />
+                </div>
             </div>
         </div>
     )

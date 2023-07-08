@@ -14,11 +14,11 @@ export default function Sidebar(){
     const router = useRouter()
     const {logout, isAuth} = useContext(UserContext)
 
-    const handleLogout = () => {
-        logout()
-        // router.push({
-        //     pathname: '/'
-        // });
+    const goToSettings = () => {
+        // logout()
+        router.push({
+            pathname: '/settings'
+        });
     }
     return(
         <div className="bg-[#191a1a] fixed min-h-screen flex flex-col justify-between w-60 cursor-pointer">
@@ -53,8 +53,8 @@ export default function Sidebar(){
                 </ul>
             </div>
 
-            <div className="mx-8 mb-8" onClick={handleLogout}>
-                <Button text={"Logout"} fa_icon={"gear"} />
+            <div className="mx-8 mb-8" onClick={goToSettings}>
+                <Button text={"Settings"} fa_icon={"gear"} />
             </div>
         </div>
     )
