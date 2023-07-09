@@ -17,6 +17,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function DetailPage() {
     const {loading, tokens, popup, setPopup, setLoading} = useContext(UserContext)
+    const [imageForm, setImageForm] = useState(false)
     const router = useRouter();
     const [article, setArticle] = useState(null)
     const { id } = router.query;

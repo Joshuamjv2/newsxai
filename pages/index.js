@@ -10,6 +10,8 @@ import { useState, useEffect, useContext} from 'react';
 import UserContext from '@/contextapi/AuthAndUsers';
 import { authFetchData } from './api/api_with_axiso';
 
+import useSWR from "swr";
+
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -22,9 +24,9 @@ export default function Home() {
 
     setLoading(false)
 
-    async function fetchArticles(){
+    async function fetchArticles(url){
         try {
-            const {data} = await authFetchData(tokens.access_token).get(`/articles?project=${current_project.id}`)
+            const {data} = await authFetchData(tokens.access_token).get(url)
             setArticles(data)
             if (data.length < 1){
                 setNoItems(true)
@@ -37,9 +39,11 @@ export default function Home() {
 
     useEffect(()=>{
         if (!loading){
-            fetchArticles()
+            fetchArticles(`/articles?project=${current_project.id}`)
         }
     }, [current_project])
+
+    const {data, error} = useSWR(current_project ? `/articles?project=${current_project.id}` : null, fetchArticles)
 
 
     return (
