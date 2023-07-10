@@ -10,6 +10,7 @@ import { useRouter } from 'next/router'
 import Button from '@/components/button'
 import LoadingSpinner from '@/components/loadingSpinner'
 import { authFetchData } from './api/api_with_axiso'
+import Image from 'next/image'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -92,26 +93,32 @@ export default function DetailPage() {
             imageForm ? <ArticleImageSelector article={article} /> : <ArticleEditForm post={article} />
             :
             <div className='mx-8'>
-              <h1 className='text-3xl font-bold text-[#ffc300] capitalize mb-2 lg:w-1/2'>{article.title}</h1>
-              <div className='flex items-center justify-between text-[#616060]'>
+              <h1 className='text-3xl font-bold capitalize mb-2 lg:w-1/2'>{article.title}</h1>
+
+              <div className='flex items-center gap-8 text-[#616060]'>
                 <div className='flex gap-2 items-center mb-2 text-lg'>
                   <FontAwesomeIcon icon={["fas", "person"]} color='#616060' />
                   <p className='text-md'>{article.author ? article.author : "Not Set"}</p>
                 </div>
-                <div><Moment format="DD/MM/YYYY">{article.created}</Moment></div>
+                <div className='mb-2'><Moment format="DD/MM/YYYY">{article.created}</Moment></div>
               </div>
+
+            {article.image &&<div className='pb-8 w-full'>
+                <Image src={article.image} alt={`${article.title}`} width={700} height={500} style={{objectFit: "fill"}} />
+              </div>}
+
               <p className='lg:w-11/12'>
                 {article.article}
               </p>
               <div className='flex justify-between mt-8 mb-8'>
                 <div className='flex gap-4 items-center'>
                 </div>
-                <div className='flex gap-12'>
+                <div className='flex gap-4'>
                   <div onClick={clickEdit}>
                     <Button text={"Edit"} fa_icon={"pen"} />
                   </div>
-                  {!article.image && <div onClick={handleImage}>
-                    <Button text={"Add Image"} fa_icon={"arrow-up"} />
+                  {<div onClick={handleImage}>
+                    <Button text={`${!article.image ? "Add Image": "Edit Image"}`} fa_icon={"arrow-up"} />
                   </div>}
                   {!article.published && <button className="">
                     <div onClick={handle_publish} className={`text-[#000] cursor-pointer text-center bg-green-800 py-2 rounded-md hover:bg-[#fff] active:bg-[#fcc300] px-6`}>
