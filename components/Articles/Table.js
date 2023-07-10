@@ -4,8 +4,11 @@ import Link from "next/link";
 import { formatDate } from "../utils";
 import TableActionIcons from "../tableActionIcons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
 
 export default function Table({data}){
+
+    const router = useRouter()
 
     const columns =  useMemo(()=>[
         {
@@ -70,9 +73,11 @@ export default function Table({data}){
             Cell: ({ value }) => (
                 <div className="flex">
                     <TableActionIcons value={value} path={"articles"} />
-                    <Link href={`/${value}`}>
+                    {/* <Link href={`/${value}/`}> */}
+                    <div onClick={()=>router.push(`/${value}`)}>
                         <FontAwesomeIcon icon={["fas", "pen"]} />
-                    </Link>
+                    </div>
+                    {/* </Link> */}
                 </div>
             )
         }

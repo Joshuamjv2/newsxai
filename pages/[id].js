@@ -3,6 +3,7 @@ import Layout from '../components/layout'
 import { useState, useEffect, useContext } from 'react'
 import UserContext from '@/contextapi/AuthAndUsers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import ArticleImageSelector from '@/components/Articles/ArticleImageSelector'
 import ArticleEditForm from '@/components/Articles/ArticleEditForm'
 
 import Moment from 'react-moment'
@@ -22,8 +23,20 @@ export default function DetailPage() {
     const [article, setArticle] = useState(null)
     const { id } = router.query;
 
+    setLoading(false)
+
+    async function getSingleArticle(){
+        try {
+            const {data} = await authFetchData(tokens.access_token).get(`/articles/${id}`)
+            setArticle(data)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     useEffect(()=>{
-        // setLoading(false)
         if (!loading){
             getSingleArticle()
         }
@@ -52,15 +65,9 @@ export default function DetailPage() {
         }
     }
 
-    async function getSingleArticle(){
-        try {
-            const {data} = await authFetchData(tokens.access_token).get(`/articles/${id}`)
-            setArticle(data)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
+    const handleImage = async () => {
+        setImageForm(true)
+        setPopup(true)
     }
 
     return (
@@ -68,7 +75,7 @@ export default function DetailPage() {
             {article ?
                 <div>
                 {popup === true ?
-                    <ArticleEditForm post={article} />
+                    imageForm ? <ArticleImageSelector article={article} /> : <ArticleEditForm post={article} />
                     :
                     <div className='mx-8'>
                         <h1 className='text-3xl font-bold text-[#ffc300] capitalize mb-2 lg:w-1/2'>{article.title}</h1>
@@ -89,6 +96,9 @@ export default function DetailPage() {
                                     <div onClick={clickEdit}>
                                         <Button text={"Edit"} fa_icon={"pen"} />
                                     </div>
+                                    {!article.image && <div onClick={handleImage}>
+                                        <Button text={"Add Image"} fa_icon={"arrow-up"} />
+                                    </div>}
                                     {!article.published && <button className="">
                                     <div onClick={handle_publish} className={`text-[#000] cursor-pointer text-center bg-green-800 py-2 rounded-md hover:bg-[#fff] active:bg-[#fcc300] px-6`}>
                                         <div className="flex items-center justify-center gap-2">
