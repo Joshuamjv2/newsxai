@@ -8,6 +8,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { authFetchData } from "@/pages/api/api_with_axiso"
 import { useRouter } from "next/router"
+import { generateUploadUrl } from "@/pages/api/s3"
+import { headers } from "next/dist/client/components/headers"
+
 
 export default function ArticleImageSelector({article, setImageForm}){
     const [images, setImages] = useState([])
@@ -28,14 +31,46 @@ export default function ArticleImageSelector({article, setImageForm}){
 
 
     const updateImage = async (image) => {
+        const fileName = `${article.id}.jpg`; // Set the desired file name
+        const fileType = 'image/jpeg'; // Set the appropriate file type
+        let file;
+
         try {
-            const {data} = await authFetchData(tokens.access_token).patch(`/articles/${article.id}`, {"image": image.urls.regular})
-            router.reload(`/${article.id}`)
+            let img;
+            const imageDownloadResponse = await fetch(
+                `${image.links.download_location}`,
+                {
+                    headers: {
+                    Authorization: "Client-ID GMjIKF6B77oLOgKe3ITnqXtZ5qcvhR3tSQiPk8a3kFk"
+                    }
+                }
+                )
+            const response = await imageDownloadResponse.json()
+            const fetch_image = await fetch(response.url)
+            .then(res => res.blob()).then(blob=>{
+                file = new File([blob], fileName, { type: fileType });
+            })
+
+
+            const url = await generateUploadUrl(fileName);
+            await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': fileType,
+            },
+            body: file,
+            });
+
+            const imageUrl = url.split('?')[0];
+
+            const { data } = await authFetchData(tokens.access_token).patch(`/articles/${article.id}`, { "image": imageUrl });
             setPopup(false)
+            router.reload(`/${article.id}`)
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
+
     const get_images = async (query = null) =>{
         try {
             const {data} = await axios.get(`https://api.unsplash.com/search/photos?client_id=GMjIKF6B77oLOgKe3ITnqXtZ5qcvhR3tSQiPk8a3kFk&query=${query ? query : 'maine'}&count=30&orientation=landscape`)

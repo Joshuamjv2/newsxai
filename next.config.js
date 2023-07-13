@@ -12,6 +12,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
         port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "newsxai-images.s3.amazonaws.com",
+        port: ""
       }
     ],
   }
