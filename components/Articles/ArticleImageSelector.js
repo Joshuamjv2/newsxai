@@ -35,35 +35,30 @@ export default function ArticleImageSelector({article, setImageForm}){
         const fileType = 'image/jpeg'; // Set the appropriate file type
         let file;
 
+        await fetch(image.urls.regular).then(res => res.blob())
+        .then(
+            blob=>{
+                console.log(blob, "blob >>>>>>>>")
+                file = new File([blob], fileName, {type: blob.type})
+            }
+        )
+
+
         try {
-            let img;
-            const imageDownloadResponse = await fetch(
-                `${image.links.download_location}`,
-                {
-                    headers: {
-                    Authorization: "Client-ID GMjIKF6B77oLOgKe3ITnqXtZ5qcvhR3tSQiPk8a3kFk"
-                    }
-                }
-                )
-            const response = await imageDownloadResponse.json()
-            const fetch_image = await fetch(response.url)
-            .then(res => res.blob()).then(blob=>{
-                file = new File([blob], fileName, { type: fileType });
-            })
-
-
             const url = await generateUploadUrl(fileName);
-            await fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': fileType,
-            },
-            body: file,
+                await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': fileType,
+                    },
+                    body: file
             });
 
             const imageUrl = url.split('?')[0];
 
-            const { data } = await authFetchData(tokens.access_token).patch(`/articles/${article.id}`, { "image": imageUrl });
+            console.log(imageUrl)
+
+            await authFetchData(tokens.access_token).patch(`/articles/${article.id}`, { "image": imageUrl });
             setPopup(false)
             router.reload(`/${article.id}`)
         } catch (error) {
