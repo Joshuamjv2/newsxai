@@ -24,6 +24,7 @@ export default function Navigation({image}){
         }))
         setCurrentProject(project)
         setShowProjects(false)
+        router.reload(router.asPath)
     }
 
     const handleLogout = () => {
