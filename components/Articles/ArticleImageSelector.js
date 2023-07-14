@@ -9,13 +9,13 @@ import * as Yup from "yup";
 import { authFetchData } from "@/pages/api/api_with_axiso"
 import { useRouter } from "next/router"
 import { generateUploadUrl } from "@/pages/api/s3"
-import { headers } from "next/dist/client/components/headers"
 
 
 export default function ArticleImageSelector({article, setImageForm}){
     const [images, setImages] = useState([])
     const {setPopup, tokens} = useContext(UserContext)
     const [selected, setSelected] = useState("")
+    const [spin, setSpin] = useState(false)
     const router = useRouter()
 
     const formik = useFormik({
@@ -34,7 +34,7 @@ export default function ArticleImageSelector({article, setImageForm}){
         const fileName = `${article.id}.jpg`; // Set the desired file name
         const fileType = 'image/jpeg'; // Set the appropriate file type
         let file;
-
+        setSpin(true)
         await fetch(image.urls.regular).then(res => res.blob())
         .then(
             blob=>{
@@ -59,8 +59,7 @@ export default function ArticleImageSelector({article, setImageForm}){
             console.log(imageUrl)
 
             await authFetchData(tokens.access_token).patch(`/articles/${article.id}`, { "image": imageUrl });
-            setPopup(false)
-            router.reload(`/${article.id}`)
+            router.reload(router.asPath)
         } catch (error) {
             console.log(error);
         }
@@ -111,8 +110,12 @@ export default function ArticleImageSelector({article, setImageForm}){
                     <Button text={"Close"} />
                 </div>
                 {selected &&
-                    <div onClick={()=>updateImage(selected)}>
-                        <Button text={"Set Image"} />
+                    <div>
+                        {!spin ? <div onClick={()=>updateImage(selected)}>
+                            <Button text={"Set Image"} />
+                        </div>
+                        :
+                        <LoadingSpinner />}
                     </div>
                 }
             </div>

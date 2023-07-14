@@ -11,18 +11,19 @@ export default function ArticleEditForm({post}){
     const {tokens, setPopup} = useContext(UserContext)
     const [spin, setSpin] = useState(false)
     const [authors, setAuthors] = useState([])
-    const [sites, setSites] = useState([])
     const [categories, setCategories] = useState([])
     const[showForm, setShowForm] = useState(false)
     const router = useRouter()
 
     async function updateArticle(id, article){
+        setSpin(true)
         try {
             const {data} = await authFetchData(tokens.access_token).patch(`/articles/${id}`, article)
-            setPopup(false)
+            // setPopup(false)
             router.reload(router.asPath)
         } catch (error) {
             console.log(error.response.status)
+            setSpin(false)
         }
     }
 
@@ -31,11 +32,9 @@ export default function ArticleEditForm({post}){
             if (post.project){
             const project = post.project
             const authors_res = await authFetchData(tokens.access_token).get(`/authors?project=${project}`)
-            const sites_res = await authFetchData(tokens.access_token).get(`/sites?project=${project}`)
             const categories_res = await authFetchData(tokens.access_token).get(`/categories?project=${project}`)
             setAuthors(authors_res.data)
             setCategories(categories_res.data)
-            setSites(sites_res.data)
             setShowForm(true)
             console.log(showForm)
         }
@@ -53,8 +52,8 @@ export default function ArticleEditForm({post}){
         initialValues: {
             post: post.article,
             title: post.title,
-            author: post.author || "",
-            category: post.category || ""
+            author: post.author || authors.length > 0 && `${authors[0].first_name} ${authors[0].last_name}` || "",
+            category: post.category || categories.length > 0 && categories[0].name || ""
         },
         onSubmit: (values) => updateArticle(post.id, values),
 
@@ -96,7 +95,7 @@ export default function ArticleEditForm({post}){
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                     >
-                        {authors.map(site=><option className="py-2 px-2" key={site.id}>{`${site.first_name} ${site.last_name}`}</option>)}
+                        {authors.map(author=><option className="py-2 px-2" key={author.id}>{`${author.first_name} ${author.last_name}`}</option>)}
                     </select>
                 </div>
 
