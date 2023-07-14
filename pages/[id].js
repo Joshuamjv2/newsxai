@@ -94,6 +94,7 @@ export default function DetailPage() {
             :
             <div className='mx-8'>
               <h1 className='text-3xl font-bold capitalize mb-2 lg:w-1/2'>{article.title}</h1>
+              {article.category && <h6 className='text-[#ffc300] text-xs'>{article.category}</h6>}
 
               <div className='flex items-center gap-8 text-[#616060]'>
                 <div className='flex gap-2 items-center mb-2 text-lg'>

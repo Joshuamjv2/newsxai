@@ -20,7 +20,7 @@ export default function ArticleEditForm({post}){
         try {
             const {data} = await authFetchData(tokens.access_token).patch(`/articles/${id}`, article)
             setPopup(false)
-            router.push(`/`)
+            router.reload(router.asPath)
         } catch (error) {
             console.log(error.response.status)
         }
