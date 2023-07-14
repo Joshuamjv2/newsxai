@@ -38,9 +38,6 @@ export default function Sidebar(){
                     <Link href={"/"}>
                         <SidebarNavItem name={"Articles"} nav_icon="book"/>
                     </Link>
-                    <Link href={"/sites"}>
-                        <SidebarNavItem name={"Your Sites"} nav_icon="globe"/>
-                    </Link>
                     <Link href={"/feeds"}>
                         <SidebarNavItem name={"Feeds"} nav_icon="rss" />
                     </Link>

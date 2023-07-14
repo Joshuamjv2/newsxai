@@ -1,21 +1,68 @@
 import { useSortBy, useTable, usePagination } from "react-table";
-import { useState, useMemo, useEffect } from "react";
-import Link from "next/link";
+import { useState, useMemo, useContext } from "react";
 import { formatDate } from "../utils";
-import TableActionIcons from "../tableActionIcons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
+import { authFetchData } from "@/pages/api/api_with_axiso";
+import UserContext from "@/contextapi/AuthAndUsers";
+import LoadingSpinner from "../loadingSpinner";
 
 export default function Table({data}){
 
     const router = useRouter()
+    const {tokens} = useContext(UserContext)
+    // selector
+    const [selectedItems, setSelectedItems] = useState([])
+    const [articles, setArticles] = useState(data)
+
+    const handleRowSelection = (row) => {
+        const id = row.original.id;
+        if (selectedItems.includes(id)) {
+            setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
+        } else {
+            setSelectedItems([...selectedItems, id]);
+        }
+    };
+
+    const handleDelete = async () => {
+        for (let i = 0; i < selectedItems.length; i++){
+            try {
+                await authFetchData(tokens.access_token).delete(`/articles/${selectedItems[i]}`)
+            } catch (error) {
+                console.log(error.response.status)
+            }
+        }
+        router.reload(router.asPath)
+    }
+
+    const handlePublish = async () => {
+        for (let i = 0; i < selectedItems.length; i++){
+            try {
+                const {data} = await authFetchData(tokens.access_token).patch(`/articles/${selectedItems[i]}`, {published: true})
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        router.reload(router.asPath)
+    }
 
     const columns =  useMemo(()=>[
         {
+            Header: "",
+            id: "selection",
+            Cell: ({ row }) => (
+                <input className="appearance-none w-4 h-4 rounded-sm border-2 bg-white border-[#191a1a] checked:bg-[#ffc300] checked:border-0"
+                type="checkbox"
+                onChange={() => handleRowSelection(row)}
+                checked={selectedItems.includes(row.original.id)}
+                />
+            ),
+        },
+        {
             Header: "TITLE",
             accessor: "title",
-            Cell: ({ value }) => (
-                <div className="truncate max-w-xs">
+            Cell: ({ value, row }) => (
+                <div onClick={()=>router.push(`/${row.original.id}`)} className="truncate max-w-xs hover:underline">
                     {value}
                 </div>
             )
@@ -39,22 +86,13 @@ export default function Table({data}){
             )
         },
         {
-            Header: "SITE",
-            accessor: "site"
-            // Cell: ({ value }) => (
-            //     <div>
-            //         {value ? value.name : ""}
-            //     </div>
-            // )
-        },
-        {
             Header: "PUBLISHED",
             accessor: "published",
             Cell: ({ value }) => (
                 <div>
                         <div className="flex justify-center align-center mr-4">
                             {value == true ?
-                                <div className="py-1 bg-green-800 px-4 rounded-md">yes</div>
+                                <div className="py-1 bg-green-700 px-4 rounded-md">yes</div>
                                 :
                                 <div className="py-1 bg-red-800 px-4 rounded-md">no</div>
                             }
@@ -71,8 +109,8 @@ export default function Table({data}){
             Header: "ACTIONS",
             accessor: "id",
             Cell: ({ value }) => (
-                <div className="flex">
-                    <TableActionIcons value={value} path={"articles"} />
+                <div className="flex justify-center">
+                    {/* <TableActionIcons value={value} path={"articles"} /> */}
                     {/* <Link href={`/${value}/`}> */}
                     <div onClick={()=>router.push(`/${value}`)}>
                         <FontAwesomeIcon icon={["fas", "pen"]} />
@@ -81,7 +119,7 @@ export default function Table({data}){
                 </div>
             )
         }
-    ], [])
+    ], [selectedItems])
     // console.log(columns, articles)
 
     const {getTableProps, getTableBodyProps, headerGroups, page, prepareRow, nextPage, previousPage, canNextPage, canPreviousPage, pageOptions, state} = useTable(
@@ -89,11 +127,24 @@ export default function Table({data}){
         useSortBy,
         usePagination
         )
-    
+
     const {pageIndex} = state
 
     return(
         <div>
+        {/* selected Items */}
+        {
+            <div className="flex pl-5 gap-24 items-end">
+                <p className="font-md text-lg">{selectedItems.length > 0 ? `Selected: ${selectedItems.length}`: "All Items"}</p>
+                {selectedItems.length > 0 && <div className="flex gap-8">
+                    <div onClick={handlePublish} className="bg-green-800 py-1 px-3 rounded-md hover:scale-110 cursor-pointer">Publish</div>
+                    <div onClick={handleDelete} className="bg-red-800 py-1 px-3 rounded-md hover:scale-110 cursor-pointer">Delete</div>
+
+                    {/* edit button problem  it goes to detail page */}
+                    {selectedItems.length === 1 && <div onClick={()=>router.push(`/${selectedItems[0]}`)} className="bg-[#ffc300] py-1 px-3 rounded-md hover:scale-110 cursor-pointer">Edit</div>}
+                </div>}
+            </div>
+        }
         <main className="px-4 mt-4" style={{ maxHeight: '420px', overflowY: 'scroll' }}>
         <table className="w-full overflow-hidden rounded-md" {...getTableProps()}>
             <thead className="">
@@ -118,7 +169,7 @@ export default function Table({data}){
                     prepareRow(row)
                     return (<tr className="hover:cursor-pointer border-t first:border-t-0 border-x-8 border-x-transparent hover:bg-[#fff] hover:text-black hover:transition-all hover:border-t-transparent" key={""} {...row.getRowProps()}>
                         {row.cells.map(cell=>(
-                            <td className={`py-2 px-2 ${row.original.published && "bg-[#50594e]"}`} key={row.original.id} {...cell.getCellProps()}>
+                            <td className={`py-2 px-2`} key={row.original.id} {...cell.getCellProps()}>
                                 {cell.render("Cell")}
                             </td>
                         ))}

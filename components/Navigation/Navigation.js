@@ -14,8 +14,6 @@ export default function Navigation({image}){
     const router = useRouter()
 
     const updateProject = (project) =>{
-        setCurrentProject(project)
-        setShowProjects(false)
         localStorage.setItem("current_project", JSON.stringify({
             name: project.name,
             id: project.id,
@@ -24,6 +22,8 @@ export default function Navigation({image}){
             created: project.created,
             updated: project.updated
         }))
+        setCurrentProject(project)
+        setShowProjects(false)
     }
 
     const handleLogout = () => {
@@ -46,6 +46,7 @@ export default function Navigation({image}){
                 setCurrentProject(projects[0])
                 localStorage.setItem("current_project", JSON.stringify(current_project))
             }
+            setShowProjects(false)
         } catch (error) {
             console.log(error)
         }

@@ -54,7 +54,6 @@ export default function ArticleEditForm({post}){
             post: post.article,
             title: post.title,
             author: post.author || "",
-            site: post.site || "",
             category: post.category || ""
         },
         onSubmit: (values) => updateArticle(post.id, values),
@@ -62,7 +61,6 @@ export default function ArticleEditForm({post}){
         validationSchema: Yup.object({
             post: Yup.string().required("First Name is required").min(100, "A minimum of 100 characters is required").optional(),
             title: Yup.string().required("Last Name is required"),
-            site: Yup.string().url("Select a valid URL"),
             author: Yup.string(),
             category: Yup.string()
         })
@@ -99,21 +97,6 @@ export default function ArticleEditForm({post}){
                         onBlur={formik.handleBlur}
                     >
                         {authors.map(site=><option className="py-2 px-2" key={site.id}>{`${site.first_name} ${site.last_name}`}</option>)}
-                    </select>
-                </div>
-
-                {/* sites */}
-                <div className="text-left pt-4 lg:w-2/3">
-                    <label className="block text-[#fff] text-md font-bold mb-1" htmlFor="site">{formik.touched.site && formik.errors.site ? formik.errors.site : "Select Site"}</label>
-                    <select
-                        className="w-full py-2 rounded-md px-2 text-black border-[#000] focus:border-[#ffc300]"
-                        name="site"
-                        type="text"
-                        value={formik.values.site}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    >
-                        {sites.map(site=><option className="py-2 px-2" key={site.id}>{site.link}</option>)}
                     </select>
                 </div>
 
