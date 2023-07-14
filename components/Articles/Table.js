@@ -135,7 +135,7 @@ export default function Table({data}){
         {/* selected Items */}
         {
             <div className="flex pl-5 gap-24 items-end">
-                <p className="font-md text-lg">{selectedItems.length > 0 ? `Selected: ${selectedItems.length}`: "All Items"}</p>
+                <p className="font-md text-lg">{selectedItems.length > 0 ? `Selected: ${selectedItems.length} of ${data.length}`: `All Items: ${data.length}`}</p>
                 {selectedItems.length > 0 && <div className="flex gap-8">
                     <div onClick={handlePublish} className="bg-green-800 py-1 px-3 rounded-md hover:scale-110 cursor-pointer">Publish</div>
                     <div onClick={handleDelete} className="bg-red-800 py-1 px-3 rounded-md hover:scale-110 cursor-pointer">Delete</div>
