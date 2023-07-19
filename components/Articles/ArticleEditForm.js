@@ -31,8 +31,17 @@ export default function ArticleEditForm({post}){
         try {
             if (post.project){
             const project = post.project
-            const authors_res = await authFetchData(tokens.access_token).get(`/authors?project=${project}`)
-            const categories_res = await authFetchData(tokens.access_token).get(`/categories?project=${project}`)
+            let authors_res = await authFetchData(tokens.access_token).get(`/authors?project=${project}`)
+            let categories_res = await authFetchData(tokens.access_token).get(`/categories?project=${project}`)
+
+            if (!post.author){
+                authors_res.data = [{"id": "default", "first_name": "Select", "last_name": "author"}].concat(authors_res.data)
+            }
+            if (!post.category){
+                categories_res.data = [{"id": "default", "name": "Select category"}].concat(categories_res.data)
+            }
+
+
             setAuthors(authors_res.data)
             setCategories(categories_res.data)
             setShowForm(true)
